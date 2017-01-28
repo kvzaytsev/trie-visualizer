@@ -41,3 +41,7 @@ svg{
     display: flex;
     justify-content: space-between;
 }
+
+.highlighted {
+  stroke: red;
+}

@@ -5,8 +5,19 @@ const textArea = document.querySelector('.js-text');
 const startBtn = document.querySelector('.js-start');
 const resultContainer = document.querySelector('.js-result');
 const searchInput = document.querySelector('.js-input');
-
 const svg = document.querySelector('.js-tree-svg');
+
+const getX = node => node.weight * 75 + 50;
+const getY = node => (node.depth-1) * 75 + 50;
+
+let dictionary;
+
+const * generateId = () => {
+  let i=0;
+  while (true) {
+    yield i++;
+  }
+}
 
 const createNode = (value, parent = null) => ({
     children: [],
@@ -32,13 +43,15 @@ const fill = (list, pNode) => {
 };
 
 const handleWord = (tree, word) => {
-    let letters = word.split('');
-    fill(letters, tree.root);
+    if (word) {
+      let letters = word.split('');
+      fill(letters, tree.root);
+    }
     return tree;
 };
 
 const parseText = (text) => {
-    let words = text.split(/\s+/g);
+    let words = text.split(/\s+/);
     let tree = {root: createNode("")};
     words.reduce(handleWord, tree);
     return tree;
@@ -82,7 +95,7 @@ const getSuitableNode = (root, path) => {
     return finalNode;
 };
 
-const getSuitableNodes = (root, letter) => {
+const findNodes = (root, letter) => {
     let queue = [].concat(root.children),
         result = [],
         node;
@@ -133,6 +146,7 @@ function drawTree(dictionary) {
 
             let terminator = createTerminator(getX(node),getY(node));
             svg.appendChild(terminator);
+            node.$ = terminator;
 
         } else {
             node.weight = node.children.reduce((res, child) => res += child.weight, 0) / node.children.length;
@@ -142,6 +156,7 @@ function drawTree(dictionary) {
 
             let nodeElement = createNodeElement(getX(node),getY(node), node.value);
             svg.appendChild(nodeElement);
+            node.$ = nodeElement;
         }
 
         depth--;
@@ -151,19 +166,36 @@ function drawTree(dictionary) {
     svg.setAttribute('viewBox', `0 0 ${maxWeight * 75 + 25} ${maxDepth * 75 + 25}`);
 }
 
-function getX(node) {
-    return node.weight * 75 + 50;
-}
-
-function getY(node) {
-    return (node.depth-1) * 75 + 50;
+const start = text => {
+  dictionary = parseText(text);
+  svg.innerHTML = "";
+  drawTree(dictionary);
 }
 
 textArea.addEventListener('input', (e) => {
-    let dictionary = parseText(e.target.value);
-    svg.innerHTML = "";
-    drawTree(dictionary);
+  start(textArea.value);
 });
+start(textArea.value);
+
+const heightNode = node => {
+  let element = node.$;
+  let circle = element.getElementsByTagName('circle')[0];
+  circle.classList.add('highlighted');
+}
+
+const search = mask => {
+  let path = mask.split("");
+  let nodes = findNodes(dictionary.root, path.shift());
+  nodes.forEach(heightNode);
+};
+
+searchInput.addEventListener('input', (e) => {
+  let mask = e.target.value;
+  if (mask !== "") {
+    search(mask);
+  }
+});
+
 
 // searchInput.addEventListener('input', (e) => {
 //     let mask = e.target.value;

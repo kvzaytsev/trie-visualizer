@@ -56,8 +56,16 @@
 	var startBtn = document.querySelector('.js-start');
 	var resultContainer = document.querySelector('.js-result');
 	var searchInput = document.querySelector('.js-input');
-
 	var svg = document.querySelector('.js-tree-svg');
+
+	var getX = function getX(node) {
+	    return node.weight * 75 + 50;
+	};
+	var getY = function getY(node) {
+	    return (node.depth - 1) * 75 + 50;
+	};
+
+	var dictionary = void 0;
 
 	var createNode = function createNode(value) {
 	    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -88,13 +96,15 @@
 	};
 
 	var handleWord = function handleWord(tree, word) {
-	    var letters = word.split('');
-	    fill(letters, tree.root);
+	    if (word) {
+	        var letters = word.split('');
+	        fill(letters, tree.root);
+	    }
 	    return tree;
 	};
 
 	var parseText = function parseText(text) {
-	    var words = text.split(/\s+/g);
+	    var words = text.split(/\s+/);
 	    var tree = { root: createNode("") };
 	    words.reduce(handleWord, tree);
 	    return tree;
@@ -139,7 +149,7 @@
 	    return finalNode;
 	};
 
-	var getSuitableNodes = function getSuitableNodes(root, letter) {
+	var findNodes = function findNodes(root, letter) {
 	    var queue = [].concat(root.children),
 	        result = [],
 	        node = void 0;
@@ -192,6 +202,7 @@
 
 	            var terminator = (0, _svgHelper.createTerminator)(getX(node), getY(node));
 	            svg.appendChild(terminator);
+	            node.$ = terminator;
 	        } else {
 	            node.weight = node.children.reduce(function (res, child) {
 	                return res += child.weight;
@@ -202,6 +213,7 @@
 
 	            var nodeElement = (0, _svgHelper.createNodeElement)(getX(node), getY(node), node.value);
 	            svg.appendChild(nodeElement);
+	            node.$ = nodeElement;
 	        }
 
 	        depth--;
@@ -211,18 +223,34 @@
 	    svg.setAttribute('viewBox', '0 0 ' + (maxWeight * 75 + 25) + ' ' + (maxDepth * 75 + 25));
 	}
 
-	function getX(node) {
-	    return node.weight * 75 + 50;
-	}
-
-	function getY(node) {
-	    return (node.depth - 1) * 75 + 50;
-	}
-
-	textArea.addEventListener('input', function (e) {
-	    var dictionary = parseText(e.target.value);
+	var start = function start(text) {
+	    dictionary = parseText(text);
 	    svg.innerHTML = "";
 	    drawTree(dictionary);
+	};
+
+	textArea.addEventListener('input', function (e) {
+	    start(textArea.value);
+	});
+	start(textArea.value);
+
+	var heightNode = function heightNode(node) {
+	    var element = node.$;
+	    var circle = element.getElementsByTagName('circle')[0];
+	    circle.classList.add('highlighted');
+	};
+
+	var search = function search(mask) {
+	    var path = mask.split("");
+	    var nodes = findNodes(dictionary.root, path.shift());
+	    nodes.forEach(heightNode);
+	};
+
+	searchInput.addEventListener('input', function (e) {
+	    var mask = e.target.value;
+	    if (mask !== "") {
+	        search(mask);
+	    }
 	});
 
 	// searchInput.addEventListener('input', (e) => {
