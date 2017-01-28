@@ -1,0 +1,43 @@
+textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.text-source {
+    width: 40%;
+}
+
+.search {
+    width: 40%;
+}
+
+.search input,
+.search button {
+    width: 100%;
+}
+
+.search-btn {
+    margin-top: 20px;
+}
+
+main {
+    height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+}
+
+.trie-section {
+    flex: 1;
+    height: 50vh;
+    text-align: center;
+}
+
+svg{
+    height: 100%;
+    width: 100%;
+}
+
+.controls-section {
+    display: flex;
+    justify-content: space-between;
+}
