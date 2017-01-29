@@ -7,22 +7,28 @@ const resultContainer = document.querySelector('.js-result');
 const searchInput = document.querySelector('.js-input');
 const svg = document.querySelector('.js-tree-svg');
 
+const styleSheet = document.styleSheets[0];
+
 const getX = node => node.weight * 75 + 50;
 const getY = node => (node.depth-1) * 75 + 50;
 
 let dictionary;
+let highlighted = [];
 
-const * generateId = () => {
+function * createGenerator() {
   let i=0;
   while (true) {
     yield i++;
   }
 }
 
+const idGenerator = createGenerator();
+
 const createNode = (value, parent = null) => ({
     children: [],
     value: value,
-    parent: parent
+    parent: parent,
+    id: idGenerator.next().value
 });
 
 const fill = (list, pNode) => {
@@ -76,11 +82,13 @@ const findApplicable = (root) => {
 
 const getSuitableNode = (root, path) => {
     let finalNode = root;
+    let nodeList = [];
     (function handleNode(node, subpath) {
         let step = subpath.shift();
         let potentialNode = node.children.find(cNode => cNode.value === step);
 
         if (potentialNode) {
+            nodeList.push(potentialNode);
             if (subpath.length) {
                 handleNode(potentialNode, subpath);
             } else {
@@ -88,14 +96,15 @@ const getSuitableNode = (root, path) => {
             }
         } else {
             finalNode = null;
+            nodeList.length = 0;
         }
 
     })(finalNode, path);
 
-    return finalNode;
+    return nodeList;
 };
 
-const findNodes = (root, letter) => {
+const bfsForNodes = (root, letter) => {
     let queue = [].concat(root.children),
         result = [],
         node;
@@ -110,12 +119,20 @@ const findNodes = (root, letter) => {
     return result;
 };
 
+const dfsFromNode = (root, handler) => {
+  const handleNode = (node) => {
+    handler(node)
+    node.children.forEach(handleNode);
+  }
+  handleNode (root);
+}
+
 const getPathForNode = (node) => {
     let acc = [],
         parent;
 
     while(parent = node.parent) {
-        acc.unshift(parent.value);
+        acc.unshift(parent);
         node = parent;
     }
 
@@ -157,6 +174,7 @@ function drawTree(dictionary) {
             let nodeElement = createNodeElement(getX(node),getY(node), node.value);
             svg.appendChild(nodeElement);
             node.$ = nodeElement;
+            nodeElement.setAttribute('id', node.id);
         }
 
         depth--;
@@ -177,52 +195,43 @@ textArea.addEventListener('input', (e) => {
 });
 start(textArea.value);
 
-const heightNode = node => {
+const highlightNode = (node, className) => {
   let element = node.$;
-  let circle = element.getElementsByTagName('circle')[0];
-  circle.classList.add('highlighted');
+  if (element) {
+    let circle = element.getElementsByTagName('circle')[0];
+    circle.classList.add(className);
+    highlighted.push(circle);
+  }
 }
 
 const search = mask => {
   let path = mask.split("");
-  let nodes = findNodes(dictionary.root, path.shift());
-  nodes.forEach(heightNode);
+  let nodes = bfsForNodes(dictionary.root, path.shift());
+  nodes.forEach(node => {
+    let lPath = path.slice(0);
+
+    if (lPath.length ) {
+      let nodeList = getSuitableNode(node, lPath);
+      if (nodeList.length) {
+        getPathForNode(node).forEach(node => highlightNode(node, 'path'));
+        [node].concat(nodeList).forEach(node => highlightNode(node, 'mask'));
+        dfsFromNode(nodeList[nodeList.length-1], node => highlightNode(node, 'path'));
+      }
+    } else {
+      getPathForNode(node).forEach(node => highlightNode(node, 'path'));
+      highlightNode(node, 'mask');
+    }
+  });
 };
 
 searchInput.addEventListener('input', (e) => {
   let mask = e.target.value;
+  highlighted.forEach(c => {
+    c.classList.remove('mask');
+    c.classList.remove('path');
+  });
+  highlighted.length = 0;
   if (mask !== "") {
     search(mask);
   }
 });
-
-
-// searchInput.addEventListener('input', (e) => {
-//     let mask = e.target.value;
-//
-//     resultContainer.innerHTML="";
-//     if (mask !== "") {
-//         let path = mask.split("");
-//         let nodes = getSuitableNodes(dictionary.root, path.shift());
-//         nodes.forEach(node => {
-//             let lPath = path.slice(0),
-//                 lNode = null;
-//
-//             if (lPath.length) {
-//                 lNode = getSuitableNode(node, lPath);
-//             } else {
-//                 lNode = node;
-//             }
-//
-//             if (lNode) {
-//                 let subPaths = findApplicable(lNode);
-//                 let prePath = getPathForNode(lNode).join("");
-//                 subPaths.forEach(subPath => {
-//                     resultContainer.innerHTML +=
-//                         `<div><span>${prePath}</span><span style="color: red">${subPath/*.substr(1, subPath.length-1)*/}</span></div>`;
-//                 })
-//             }
-//
-//         });
-//     }
-// });

@@ -1,23 +1,33 @@
 textarea {
     width: 100%;
-    height: 100px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .text-source {
-    width: 40%;
+    flex-grow: 2;
+    height: 75px;
+    margin-right: 8px;
 }
 
 .search {
-    width: 40%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.search input {
+  flex-grow: 1;
 }
 
 .search input,
 .search button {
     width: 100%;
+    box-sizing: border-box;
 }
 
 .search-btn {
-    margin-top: 20px;
 }
 
 main {
@@ -42,6 +52,14 @@ svg{
     justify-content: space-between;
 }
 
-.highlighted {
+
+
+.path {
+  stroke: green;
+  stroke-width: 5px;
+}
+
+.mask {
   stroke: red;
+  stroke-width: 5px;
 }
