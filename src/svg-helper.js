@@ -17,9 +17,9 @@ export const createTerminator = (cx, cy) => {
     let circle = createCircle(cx, cy, 25);
     let circleInternal = createCircle(cx, cy, 10);
 
-    circleInternal.setAttribute('fill', 'black');
+    circleInternal.setAttribute('fill', '#ccc');
 
-    group.appendChild(circle);
+    // group.appendChild(circle);
     group.appendChild(circleInternal);
 
     return group;
@@ -34,7 +34,7 @@ export const createLine = (x1, y1, x2, y2) => {
     line.setAttribute('y2', y2);
 
     line.setAttribute('stroke', 'black');
-    line.setAttribute('stroke-width', 2);
+    line.setAttribute('stroke-width', 1);
 
     return line;
 }
@@ -58,7 +58,7 @@ export const createCircle = (cx, cy, r) => {
     let circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 
     circle.setAttribute('stroke', 'black');
-    circle.setAttribute('stroke-width', 2);
+    circle.setAttribute('stroke-width', 1);
     circle.setAttribute('fill', 'white');
     circle.setAttribute('r', r);
     circle.setAttribute('cx', cx);

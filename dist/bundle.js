@@ -46,15 +46,13 @@
 
 	'use strict';
 
-	var _toConsumableArray2 = __webpack_require__(1);
-
-	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 	var _regenerator = __webpack_require__(55);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
 	var _svgHelper = __webpack_require__(59);
+
+	var _utils = __webpack_require__(61);
 
 	var _mocks = __webpack_require__(60);
 
@@ -66,278 +64,157 @@
 	var startBtn = document.querySelector('.js-start');
 	var resultContainer = document.querySelector('.js-result');
 	var searchInput = document.querySelector('.js-input');
-	var svg = document.querySelector('.js-tree-svg');
+	var svg = document.querySelector('#trie');
 
 	var styleSheet = document.styleSheets[0];
 
 	var getX = function getX(node) {
-	    return node.weight * 75 + 50;
+	  return node.weight * 75 + 50;
 	};
 	var getY = function getY(node) {
-	    return (node.depth - 1) * 75 + 50;
+	  return (node.depth - 1) * 75 + 50;
 	};
 
 	var dictionary = void 0;
 	var highlighted = [];
 
 	function createGenerator() {
-	    var i;
-	    return _regenerator2.default.wrap(function createGenerator$(_context) {
-	        while (1) {
-	            switch (_context.prev = _context.next) {
-	                case 0:
-	                    i = 0;
+	  var i;
+	  return _regenerator2.default.wrap(function createGenerator$(_context) {
+	    while (1) {
+	      switch (_context.prev = _context.next) {
+	        case 0:
+	          i = 0;
 
-	                case 1:
-	                    if (false) {
-	                        _context.next = 6;
-	                        break;
-	                    }
+	        case 1:
+	          if (false) {
+	            _context.next = 6;
+	            break;
+	          }
 
-	                    _context.next = 4;
-	                    return i++;
+	          _context.next = 4;
+	          return i++;
 
-	                case 4:
-	                    _context.next = 1;
-	                    break;
+	        case 4:
+	          _context.next = 1;
+	          break;
 
-	                case 6:
-	                case 'end':
-	                    return _context.stop();
-	            }
-	        }
-	    }, _marked[0], this);
+	        case 6:
+	        case 'end':
+	          return _context.stop();
+	      }
+	    }
+	  }, _marked[0], this);
 	}
 
 	var idGenerator = createGenerator();
 
-	var createNode = function createNode(value) {
-	    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-	    return {
-	        children: [],
-	        value: value,
-	        parent: parent,
-	        id: idGenerator.next().value
-	    };
-	};
-
-	var fill = function fill(list, pNode) {
-	    var letter = list.shift();
-	    var cNode = pNode.children.find(function (child) {
-	        return child.value === letter;
-	    });
-
-	    if (!cNode) {
-	        cNode = createNode(letter, pNode);
-	        pNode.children.push(cNode);
-	    }
-
-	    if (list.length) {
-	        fill(list, cNode);
-	    } else if (cNode.children.length === 0) {
-	        var terminator = createNode(null, cNode);
-	        cNode.children.push(terminator);
-	    }
-	};
-
-	var handleWord = function handleWord(tree, word) {
-	    if (word) {
-	        var letters = word.split('');
-	        fill(letters, tree.root);
-	    }
-	    return tree;
-	};
-
-	var parseText = function parseText(text) {
-	    var words = text.split(/\s+/);
-	    var tree = { root: createNode("") };
-	    words.reduce(handleWord, tree);
-	    return tree;
-	};
-
-	var findApplicable = function findApplicable(root) {
-	    var acc = [];
-	    var results = [];
-
-	    (function handleNode(node) {
-	        acc.push(node.value);
-
-	        node.children.length ? node.children.forEach(handleNode) : results.push(acc.filter(function (l) {
-	            return l;
-	        }).join(""));
-
-	        acc.pop();
-	    })(root);
-
-	    return results;
-	};
-
-	var getSuitableNode = function getSuitableNode(root, path) {
-	    var finalNode = root;
-	    var nodeList = [];
-	    (function handleNode(node, subpath) {
-	        var step = subpath.shift();
-	        var potentialNode = node.children.find(function (cNode) {
-	            return cNode.value === step;
-	        });
-
-	        if (potentialNode) {
-	            nodeList.push(potentialNode);
-	            if (subpath.length) {
-	                handleNode(potentialNode, subpath);
-	            } else {
-	                finalNode = potentialNode;
-	            }
-	        } else {
-	            finalNode = null;
-	            nodeList.length = 0;
-	        }
-	    })(finalNode, path);
-
-	    return nodeList;
-	};
-
-	var bfsForNodes = function bfsForNodes(root, letter) {
-	    var queue = [].concat(root.children),
-	        result = [],
-	        node = void 0;
-
-	    while (node = queue.shift()) {
-	        queue.push.apply(queue, (0, _toConsumableArray3.default)(node.children));
-	        if (node.value === letter) {
-	            result.push(node);
-	        }
-	    }
-
-	    return result;
-	};
-
-	var dfsFromNode = function dfsFromNode(root, handler) {
-	    var handleNode = function handleNode(node) {
-	        handler(node);
-	        node.children.forEach(handleNode);
-	    };
-	    handleNode(root);
-	};
-
-	var getPathForNode = function getPathForNode(node) {
-	    var acc = [],
-	        parent = void 0;
-
-	    while (parent = node.parent) {
-	        acc.unshift(parent);
-	        node = parent;
-	    }
-
-	    return acc.filter(function (letter) {
-	        return letter;
-	    });
-	};
-
 	function drawTree(dictionary) {
-	    var linesGroup = (0, _svgHelper.createGroup)();
-	    var weight = 0,
-	        depth = 0,
-	        maxWeight = 0,
-	        maxDepth = 0;
+	  var linesGroup = (0, _svgHelper.createGroup)();
+	  var weight = 0,
+	      depth = 0,
+	      maxWeight = 0,
+	      maxDepth = 0;
 
-	    svg.appendChild(linesGroup);
+	  svg.appendChild(linesGroup);
 
-	    var handleNode = function handleNode(node) {
+	  var handleNode = function handleNode(node) {
 
-	        depth++;
-	        maxDepth = Math.max(maxDepth, depth);
-	        node.depth = depth;
+	    depth++;
+	    maxDepth = Math.max(maxDepth, depth);
+	    node.depth = depth;
 
-	        node.children.forEach(handleNode);
+	    node.children.forEach(handleNode);
 
-	        if (node.children.length === 0) {
-	            node.weight = weight;
-	            weight++;
-	            maxWeight = Math.max(maxWeight, weight);
+	    if (node.children.length === 0) {
+	      node.weight = weight++;
+	      // weight ++;
+	      maxWeight = Math.max(maxWeight, weight);
 
-	            var terminator = (0, _svgHelper.createTerminator)(getX(node), getY(node));
-	            svg.appendChild(terminator);
-	            node.$ = terminator;
-	        } else {
-	            node.weight = node.children.reduce(function (res, child) {
-	                return res += child.weight;
-	            }, 0) / node.children.length;
-	            node.children.forEach(function (child) {
-	                linesGroup.appendChild((0, _svgHelper.createLine)(getX(node), getY(node), getX(child), getY(child)));
-	            });
+	      var terminator = (0, _svgHelper.createTerminator)(getX(node), getY(node));
+	      svg.appendChild(terminator);
+	      node.$ = terminator;
+	    } else {
+	      node.weight = node.children.reduce(function (res, child) {
+	        return res += child.weight;
+	      }, 0) / node.children.length;
 
-	            var nodeElement = (0, _svgHelper.createNodeElement)(getX(node), getY(node), node.value);
-	            svg.appendChild(nodeElement);
-	            node.$ = nodeElement;
-	            nodeElement.setAttribute('id', node.id);
-	        }
+	      var nodeElement = (0, _svgHelper.createNodeElement)(getX(node), getY(node), node.value);
+	      node.children.forEach(function (child) {
+	        var line = (0, _svgHelper.createLine)(getX(node), getY(node), getX(child), getY(child));
+	        child.$_l = line;
+	        child.$.insertBefore(line, child.$.firstChild);
+	      });
 
-	        depth--;
-	    };
+	      svg.appendChild(nodeElement);
+	      node.$ = nodeElement;
+	    }
 
-	    handleNode(dictionary.root);
-	    svg.setAttribute('viewBox', '0 0 ' + (maxWeight * 75 + 25) + ' ' + (maxDepth * 75 + 25));
+	    depth--;
+	  };
+
+	  handleNode(dictionary.root);
+	  svg.setAttribute('viewBox', '0 0 ' + (maxWeight * 75 + 25) + ' ' + (maxDepth * 75 + 25));
 	}
 
 	var start = function start(text) {
-	    dictionary = parseText(text);
-	    svg.innerHTML = "";
-	    drawTree(dictionary);
+	  dictionary = (0, _utils.parseText)(text);
+	  svg.innerHTML = "";
+	  drawTree(dictionary);
 	};
 
 	textArea.addEventListener('input', function (e) {
-	    start(textArea.value);
+	  start(textArea.value);
 	});
 	start(textArea.value);
 
 	var highlightNode = function highlightNode(node, className) {
-	    var element = node.$;
-	    if (element) {
-	        var circle = element.getElementsByTagName('circle')[0];
-	        circle.classList.add(className);
-	        highlighted.push(circle);
-	    }
+	  var element = node.$;
+	  if (element) {
+	    element.classList.add(className);
+	    highlighted.push(element);
+	  }
 	};
 
 	var search = function search(mask) {
-	    var path = mask.split("");
-	    var nodes = bfsForNodes(dictionary.root, path.shift());
-	    nodes.forEach(function (node) {
-	        var lPath = path.slice(0);
+	  var path = mask.split("");
+	  var nodes = (0, _utils.bfsForNodes)(dictionary.root, path.shift());
+	  nodes.forEach(function (node) {
+	    var lPath = path.slice(0);
 
-	        if (lPath.length) {
-	            var nodeList = getSuitableNode(node, lPath);
-	            if (nodeList.length) {
-	                getPathForNode(node).forEach(function (node) {
-	                    return highlightNode(node, 'path');
-	                });
-	                [node].concat(nodeList).forEach(function (node) {
-	                    return highlightNode(node, 'mask');
-	                });
-	                dfsFromNode(nodeList[nodeList.length - 1], function (node) {
-	                    return highlightNode(node, 'path');
-	                });
-	            }
-	        } else {
-	            getPathForNode(node).forEach(function (node) {
-	                return highlightNode(node, 'path');
-	            });
-	            highlightNode(node, 'mask');
-	        }
-	    });
+	    if (lPath.length) {
+	      var nodeList = (0, _utils.getSuitableNode)(node, lPath);
+	      if (nodeList.length) {
+	        (0, _utils.getPathForNode)(node).forEach(function (node) {
+	          return highlightNode(node, 'path');
+	        });
+	        [node].concat(nodeList).forEach(function (node) {
+	          return highlightNode(node, 'mask');
+	        });
+	        (0, _utils.dfsFromNode)(nodeList[nodeList.length - 1], function (node) {
+	          return highlightNode(node, 'rest');
+	        });
+	      }
+	    } else {
+	      (0, _utils.getPathForNode)(node).forEach(function (node) {
+	        return highlightNode(node, 'path');
+	      });
+	      highlightNode(node, 'mask');
+	    }
+	  });
 	};
 
 	searchInput.addEventListener('input', function (e) {
-	    var mask = e.target.value;
-	    highlighted.forEach(function (c) {
-	        c.classList.remove('mask');
-	        c.classList.remove('path');
+	  var mask = e.target.value;
+	  highlighted.forEach(function (c) {
+	    c.classList.forEach(function (classN) {
+	      return c.classList.remove(classN);
 	    });
-	    highlighted.length = 0;
-	    if (mask !== "") {
-	        search(mask);
-	    }
+	  });
+	  highlighted.length = 0;
+	  if (mask !== "") {
+	    search(mask);
+	  }
 	});
 
 /***/ },
@@ -2187,9 +2064,9 @@
 	    var circle = createCircle(cx, cy, 25);
 	    var circleInternal = createCircle(cx, cy, 10);
 
-	    circleInternal.setAttribute('fill', 'black');
+	    circleInternal.setAttribute('fill', '#ccc');
 
-	    group.appendChild(circle);
+	    // group.appendChild(circle);
 	    group.appendChild(circleInternal);
 
 	    return group;
@@ -2204,7 +2081,7 @@
 	    line.setAttribute('y2', y2);
 
 	    line.setAttribute('stroke', 'black');
-	    line.setAttribute('stroke-width', 2);
+	    line.setAttribute('stroke-width', 1);
 
 	    return line;
 	};
@@ -2228,7 +2105,7 @@
 	    var circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 
 	    circle.setAttribute('stroke', 'black');
-	    circle.setAttribute('stroke-width', 2);
+	    circle.setAttribute('stroke-width', 1);
 	    circle.setAttribute('fill', 'white');
 	    circle.setAttribute('r', r);
 	    circle.setAttribute('cx', cx);
@@ -2247,6 +2124,145 @@
 	  value: true
 	});
 	var textMock = exports.textMock = "cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin";
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.getPathForNode = exports.dfsFromNode = exports.bfsForNodes = exports.getSuitableNode = exports.findApplicable = exports.parseText = exports.handleWord = exports.fill = exports.createNode = undefined;
+
+	var _toConsumableArray2 = __webpack_require__(1);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var createNode = exports.createNode = function createNode(value) {
+	    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	    return {
+	        children: [],
+	        value: value,
+	        parent: parent
+	    };
+	};
+
+	var fill = exports.fill = function fill(list, pNode) {
+	    var letter = list.shift();
+	    var cNode = pNode.children.find(function (child) {
+	        return child.value === letter;
+	    });
+
+	    if (!cNode) {
+	        cNode = createNode(letter, pNode);
+	        pNode.children.push(cNode);
+	    }
+
+	    if (list.length) {
+	        fill(list, cNode);
+	    } else if (cNode.children.length === 0) {
+	        var terminator = createNode(null, cNode);
+	        cNode.children.push(terminator);
+	    }
+	};
+
+	var handleWord = exports.handleWord = function handleWord(tree, word) {
+	    if (word) {
+	        var letters = word.split('');
+	        fill(letters, tree.root);
+	    }
+	    return tree;
+	};
+
+	var parseText = exports.parseText = function parseText(text) {
+	    var words = text.split(/\s+/);
+	    var tree = { root: createNode("") };
+	    words.reduce(handleWord, tree);
+	    return tree;
+	};
+
+	var findApplicable = exports.findApplicable = function findApplicable(root) {
+	    var acc = [];
+	    var results = [];
+
+	    (function handleNode(node) {
+	        acc.push(node.value);
+
+	        node.children.length ? node.children.forEach(handleNode) : results.push(acc.filter(function (l) {
+	            return l;
+	        }).join(""));
+
+	        acc.pop();
+	    })(root);
+
+	    return results;
+	};
+
+	var getSuitableNode = exports.getSuitableNode = function getSuitableNode(root, path) {
+	    var finalNode = root;
+	    var nodeList = [];
+	    (function handleNode(node, subpath) {
+	        var step = subpath.shift();
+	        var potentialNode = node.children.find(function (cNode) {
+	            return cNode.value === step;
+	        });
+
+	        if (potentialNode) {
+	            nodeList.push(potentialNode);
+	            if (subpath.length) {
+	                handleNode(potentialNode, subpath);
+	            } else {
+	                finalNode = potentialNode;
+	            }
+	        } else {
+	            finalNode = null;
+	            nodeList.length = 0;
+	        }
+	    })(finalNode, path);
+
+	    return nodeList;
+	};
+
+	var bfsForNodes = exports.bfsForNodes = function bfsForNodes(root, letter) {
+	    var queue = [].concat(root.children),
+	        result = [],
+	        node = void 0;
+
+	    while (node = queue.shift()) {
+	        queue.push.apply(queue, (0, _toConsumableArray3.default)(node.children));
+	        if (node.value === letter) {
+	            result.push(node);
+	        }
+	    }
+
+	    return result;
+	};
+
+	var dfsFromNode = exports.dfsFromNode = function dfsFromNode(root, handler) {
+	    var handleNode = function handleNode(node) {
+	        handler(node);
+	        node.children.forEach(handleNode);
+	    };
+	    handleNode(root);
+	};
+
+	var getPathForNode = exports.getPathForNode = function getPathForNode(node) {
+	    var acc = [],
+	        parent = void 0;
+
+	    while (parent = node.parent) {
+	        acc.unshift(parent);
+	        node = parent;
+	    }
+
+	    return acc.filter(function (letter) {
+	        return letter;
+	    });
+	};
 
 /***/ }
 /******/ ]);

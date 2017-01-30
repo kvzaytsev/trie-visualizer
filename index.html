@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700,900" rel="stylesheet">
     <link rel="stylesheet" href="core.css">
 </head>
 <body>
@@ -15,9 +17,6 @@
                 <div>
                     <input class="js-input" type="text">
                 </div>
-                <div class="search-btn">
-                    <button type="button" class="btn start-btn js-start">Start</button>
-                </div>
             </div>
         </section>
         <section class="trie-section js-tree">
@@ -25,9 +24,25 @@
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="1.1"
-                class="js-tree-svg"
-                xml:space="preserve"
-            ></svg>
+                class="js-tree-svg">
+
+                <defs>
+                    <filter id="f1" width="200%" height="200%">
+                      <feOffset result="offOut" in="SourceGraphic" dx="5" dy="5" />
+                      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
+                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                    </filter>
+                    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                        <feOffset dx="2" dy="2" />
+                        <feMerge>
+                            <feMergeNode />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                  </filter>
+                </defs>
+                <g id="trie"/>
+            </svg>
         </section>
     </main>
 
