@@ -165,6 +165,7 @@
 
 	textArea.addEventListener('input', function (e) {
 	  start(textArea.value);
+	  search();
 	});
 	start(textArea.value);
 
@@ -176,36 +177,8 @@
 	  }
 	};
 
-	var search = function search(mask) {
-	  var path = mask.split("");
-	  var nodes = (0, _utils.bfsForNodes)(dictionary.root, path.shift());
-	  nodes.forEach(function (node) {
-	    var lPath = path.slice(0);
-
-	    if (lPath.length) {
-	      var nodeList = (0, _utils.getSuitableNode)(node, lPath);
-	      if (nodeList.length) {
-	        (0, _utils.getPathForNode)(node).forEach(function (node) {
-	          return highlightNode(node, 'path');
-	        });
-	        [node].concat(nodeList).forEach(function (node) {
-	          return highlightNode(node, 'mask');
-	        });
-	        (0, _utils.dfsFromNode)(nodeList[nodeList.length - 1], function (node) {
-	          return highlightNode(node, 'rest');
-	        });
-	      }
-	    } else {
-	      (0, _utils.getPathForNode)(node).forEach(function (node) {
-	        return highlightNode(node, 'path');
-	      });
-	      highlightNode(node, 'mask');
-	    }
-	  });
-	};
-
-	searchInput.addEventListener('input', function (e) {
-	  var mask = e.target.value;
+	var search = function search() {
+	  var mask = searchInput.value;
 	  highlighted.forEach(function (c) {
 	    c.classList.forEach(function (classN) {
 	      return c.classList.remove(classN);
@@ -213,8 +186,38 @@
 	  });
 	  highlighted.length = 0;
 	  if (mask !== "") {
-	    search(mask);
+	    (function () {
+	      var path = mask.split("");
+	      var nodes = (0, _utils.bfsForNodes)(dictionary.root, path.shift());
+	      nodes.forEach(function (node) {
+	        var lPath = path.slice(0);
+
+	        if (lPath.length) {
+	          var nodeList = (0, _utils.getSuitableNode)(node, lPath);
+	          if (nodeList.length) {
+	            (0, _utils.getPathForNode)(node).forEach(function (node) {
+	              return highlightNode(node, 'path');
+	            });
+	            [node].concat(nodeList).forEach(function (node) {
+	              return highlightNode(node, 'mask');
+	            });
+	            (0, _utils.dfsFromNode)(nodeList[nodeList.length - 1], function (node) {
+	              return highlightNode(node, 'rest');
+	            });
+	          }
+	        } else {
+	          (0, _utils.getPathForNode)(node).forEach(function (node) {
+	            return highlightNode(node, 'path');
+	          });
+	          highlightNode(node, 'mask');
+	        }
+	      });
+	    })();
 	  }
+	};
+
+	searchInput.addEventListener('input', function (e) {
+	  search();
 	});
 
 /***/ },

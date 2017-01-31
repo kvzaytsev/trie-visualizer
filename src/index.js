@@ -81,6 +81,7 @@ const start = text => {
 
 textArea.addEventListener('input', (e) => {
   start(textArea.value);
+  search();
 });
 start(textArea.value);
 
@@ -92,33 +93,33 @@ const highlightNode = (node, className) => {
   }
 }
 
-const search = mask => {
-  let path = mask.split("");
-  let nodes = bfsForNodes(dictionary.root, path.shift());
-  nodes.forEach(node => {
-    let lPath = path.slice(0);
+const search = () => {
+    let mask = searchInput.value;
+    highlighted.forEach(c => {
+      c.classList.forEach(classN => c.classList.remove(classN));
+    });
+    highlighted.length = 0;
+    if (mask !== "") {
+      let path = mask.split("");
+      let nodes = bfsForNodes(dictionary.root, path.shift());
+      nodes.forEach(node => {
+        let lPath = path.slice(0);
 
-    if (lPath.length ) {
-      let nodeList = getSuitableNode(node, lPath);
-      if (nodeList.length) {
-        getPathForNode(node).forEach(node => highlightNode(node, 'path'));
-        [node].concat(nodeList).forEach(node => highlightNode(node, 'mask'));
-        dfsFromNode(nodeList[nodeList.length-1], node => highlightNode(node, 'rest'));
-      }
-    } else {
-      getPathForNode(node).forEach(node => highlightNode(node, 'path'));
-      highlightNode(node, 'mask');
-    }
-  });
+        if (lPath.length ) {
+          let nodeList = getSuitableNode(node, lPath);
+          if (nodeList.length) {
+            getPathForNode(node).forEach(node => highlightNode(node, 'path'));
+            [node].concat(nodeList).forEach(node => highlightNode(node, 'mask'));
+            dfsFromNode(nodeList[nodeList.length-1], node => highlightNode(node, 'rest'));
+          }
+        } else {
+          getPathForNode(node).forEach(node => highlightNode(node, 'path'));
+          highlightNode(node, 'mask');
+        }
+      });
+  }
 };
 
 searchInput.addEventListener('input', (e) => {
-  let mask = e.target.value;
-  highlighted.forEach(c => {
-    c.classList.forEach(classN => c.classList.remove(classN));
-  });
-  highlighted.length = 0;
-  if (mask !== "") {
-    search(mask);
-  }
+  search();
 });
