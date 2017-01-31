@@ -46,7 +46,6 @@ function drawTree(dictionary) {
 
         if (node.children.length === 0) {
             node.weight = weight ++;
-            // weight ++;
             maxWeight = Math.max(maxWeight, weight);
 
             let terminator = createTerminator(getX(node),getY(node));
@@ -62,7 +61,6 @@ function drawTree(dictionary) {
                 child.$_l = line;
                 child.$.insertBefore(line, child.$.firstChild);
             });
-
 
             svgContentG.appendChild(nodeElement);
             node.$ = nodeElement;
@@ -122,6 +120,7 @@ const search = () => {
         } else {
           getPathForNode(node).forEach(node => highlightNode(node, 'path'));
           highlightNode(node, 'mask');
+          dfsFromNode(node, node => highlightNode(node, 'rest'));
         }
       });
   }
