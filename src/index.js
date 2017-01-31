@@ -1,12 +1,14 @@
 import {createGroup, createLine, createTerminator, createNodeElement} from './svg-helper';
-import {getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode} from './utils';
+import {getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
 import {textMock} from './mocks';
 
 const textArea = document.querySelector('.js-text');
 const startBtn = document.querySelector('.js-start');
 const resultContainer = document.querySelector('.js-result');
 const searchInput = document.querySelector('.js-input');
-const svg = document.querySelector('#trie');
+
+const svg = document.querySelector('.js-tree-svg');
+const svgContentG = document.querySelector('.js-tree-content');
 
 const styleSheet = document.styleSheets[0];
 
@@ -32,7 +34,7 @@ function drawTree(dictionary) {
         maxWeight = 0,
         maxDepth = 0;
 
-    svg.appendChild(linesGroup);
+    svgContentG.appendChild(linesGroup);
 
     const handleNode = (node) => {
 
@@ -48,7 +50,7 @@ function drawTree(dictionary) {
             maxWeight = Math.max(maxWeight, weight);
 
             let terminator = createTerminator(getX(node),getY(node));
-            svg.appendChild(terminator);
+            svgContentG.appendChild(terminator);
             node.$ = terminator;
 
         } else {
@@ -62,7 +64,7 @@ function drawTree(dictionary) {
             });
 
 
-            svg.appendChild(nodeElement);
+            svgContentG.appendChild(nodeElement);
             node.$ = nodeElement;
         }
 
@@ -75,7 +77,7 @@ function drawTree(dictionary) {
 
 const start = text => {
   dictionary = parseText(text);
-  svg.innerHTML = "";
+  svgContentG.innerHTML = "";
   drawTree(dictionary);
 }
 
@@ -89,19 +91,24 @@ const highlightNode = (node, className) => {
   let element = node.$;
   if (element) {
       element.classList.add(className);
+      element.classList.add('found');
       highlighted.push(element);
   }
 }
 
 const search = () => {
     let mask = searchInput.value;
-    highlighted.forEach(c => {
-      c.classList.forEach(classN => c.classList.remove(classN));
-    });
+
+    clearClassList(svgContentG);
+    highlighted.forEach(clearClassList);
     highlighted.length = 0;
+
     if (mask !== "") {
       let path = mask.split("");
       let nodes = bfsForNodes(dictionary.root, path.shift());
+      if (nodes.length) {
+          svgContentG.classList.add('grey-out');
+      }
       nodes.forEach(node => {
         let lPath = path.slice(0);
 
@@ -111,7 +118,7 @@ const search = () => {
             getPathForNode(node).forEach(node => highlightNode(node, 'path'));
             [node].concat(nodeList).forEach(node => highlightNode(node, 'mask'));
             dfsFromNode(nodeList[nodeList.length-1], node => highlightNode(node, 'rest'));
-          }
+        }
         } else {
           getPathForNode(node).forEach(node => highlightNode(node, 'path'));
           highlightNode(node, 'mask');

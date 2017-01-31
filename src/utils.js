@@ -111,3 +111,9 @@ export const getPathForNode = (node) => {
 
     return acc.filter(letter => letter);
 }
+
+export const clearClassList = element => {
+    let acc = [];
+    element.classList.forEach(c => acc.push(c));
+    acc.forEach(c => element.classList.remove(c));
+}

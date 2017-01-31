@@ -60,6 +60,19 @@ svg text {
     justify-content: space-between;
 }
 
+.grey-out g:not(.found) text {
+    fill: #eee;
+}
+
+.grey-out g:not(.found) line,
+.grey-out g:not(.found) circle {
+    stroke: #ccc;
+}
+
+.found circle {
+    opacity: 1;
+}
+
 .path circle,
 .rest circle,
 .mask circle {
@@ -71,7 +84,7 @@ svg text {
 .path line,
 .rest line,
 .mask line {
-    stroke-width: 4px;
+    stroke-width: 3px;
 }
 
 .path circle {
