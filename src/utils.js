@@ -92,6 +92,47 @@ export const bfsForNodes = (root, letter) => {
     return result;
 };
 
+export const dfsForPath = (root, path) => {
+    let originalLenght = path.length;
+    let results = [];
+    let accList = [];
+
+    function bfsForLetter(queue, letter) {
+        let result = [],
+            node;
+
+        if (letter) {
+            queue = [].concat(queue);
+            while (node = queue.shift()) {
+                queue.push(...node.children);
+                if (node.value === letter){
+                    result.push(node);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    function handlePath(nodeList, path, acc) {
+        let letter = path.shift();
+        let nodes = bfsForLetter(nodeList, letter);
+
+        results.push(...nodes);
+        nodes.forEach(child => {
+            let clone = acc.slice(0);
+            clone.push(child)
+            accList.push(clone);
+            accList = accList.filter(acc => acc.length === originalLenght);
+            handlePath(child.children, path.slice(0), clone);
+        });
+    }
+
+    handlePath(root.children, path, []);
+
+    return accList.filter(acc => acc.length === originalLenght);
+};
+
 export const dfsFromNode = (root, handler) => {
   const handleNode = (node) => {
     handler(node)

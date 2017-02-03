@@ -1,5 +1,5 @@
 import {createGroup, createLine, createTerminator, createNodeElement} from './svg-helper';
-import {getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
+import {breadthFirstTraversal, dfsForPath, getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
 import {textMock} from './mocks';
 
 const textArea = document.querySelector('.js-text');
@@ -95,7 +95,7 @@ const highlightNode = (node, className) => {
 }
 
 const search = () => {
-    let mask = searchInput.value;
+    let mask = searchInput.value.toLowerCase();
 
     clearClassList(svgContentG);
     highlighted.forEach(clearClassList);
@@ -103,25 +103,14 @@ const search = () => {
 
     if (mask !== "") {
       let path = mask.split("");
-      let nodes = bfsForNodes(dictionary.root, path.shift());
-      if (nodes.length) {
-          svgContentG.classList.add('grey-out');
-      }
-      nodes.forEach(node => {
-        let lPath = path.slice(0);
+      svgContentG.classList.add('grey-out');
 
-        if (lPath.length ) {
-          let nodeList = getSuitableNode(node, lPath);
-          if (nodeList.length) {
-            getPathForNode(node).forEach(node => highlightNode(node, 'path'));
-            [node].concat(nodeList).forEach(node => highlightNode(node, 'mask'));
-            dfsFromNode(nodeList[nodeList.length-1], node => highlightNode(node, 'rest'));
-        }
-        } else {
-          getPathForNode(node).forEach(node => highlightNode(node, 'path'));
-          highlightNode(node, 'mask');
-          dfsFromNode(node, node => highlightNode(node, 'rest'));
-        }
+      dfsForPath(dictionary.root, path).forEach(nodeList => {
+          let head = nodeList[nodeList.length-1];
+          getPathForNode(head).forEach(node => highlightNode(node, 'path'));
+          nodeList.forEach(node => highlightNode(node, 'mask'));
+
+          dfsFromNode(head, node => highlightNode(node, 'rest'));
       });
   }
 };

@@ -9,38 +9,45 @@
 </head>
 <body>
     <main>
-        <section class="controls-section">
+        <section class="trie-section">
             <div class="text-source">
-                <textarea class="js-text">cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel</textarea>
+                <textarea id="text-box" class="js-text">cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel</textarea>
             </div>
-            <div class="search">
-                <div>
-                    <input class="js-input" type="text">
-                </div>
-            </div>
-        </section>
-        <section class="trie-section js-tree">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                class="js-tree-svg">
+            <div class="trie-container">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    version="1.1"
+                    class="js-tree-svg">
 
-                <defs>
-                    <filter id="dropShadow" x="-20%" y="-20%" width="200%" height="200%">
-                    	<feGaussianBlur in="SourceAlpha" result="blur-out" stdDeviation="4" />
-                    	<feOffset in="blur-out" result="the-shadow" dx="5" dy="5"/>
-                    	<feColorMatrix in="the-shadow" result="color-out" type="matrix"
-                      		values="0 0 0 0   0
-                            		0 0 0 0   0
-                              		0 0 0 0   0
-                              		0 0 0 .5 0"/>
-                    	<feBlend in="SourceGraphic" in2="color-out" mode="normal"/>
-                  	</filter>
-                </defs>
-                <g class="js-tree-content"/>
-            </svg>
+                    <defs>
+                        <filter id="dropShadow" x="-20%" y="-20%" width="200%" height="200%">
+                        	<feGaussianBlur in="SourceAlpha" result="blur-out" stdDeviation="4" />
+                        	<feOffset in="blur-out" result="the-shadow" dx="5" dy="5"/>
+                        	<feColorMatrix in="the-shadow" result="color-out" type="matrix"
+                          		values="0 0 0 0   0
+                                		0 0 0 0   0
+                                  		0 0 0 0   0
+                                  		0 0 0 .5 0"/>
+                        	<feBlend in="SourceGraphic" in2="color-out" mode="normal"/>
+                      	</filter>
+                    </defs>
+                    <g class="js-tree-content"/>
+                </svg>
+            </div>
         </section>
+
+        <section class="search-section">
+            <div class="search-container">
+                <label class="search-label" for="search-input">Fuzzy search</label>
+                <input id="search-input" class="search-input js-input" type="text">
+            </div>
+            <div class="result-container">
+                <label class="result-label">Search Results</label>
+                <div class="result-list"></div>
+            </div>
+        </section>
+
     </main>
 
     <script src="./dist/bundle.js"></script>

@@ -180,46 +180,29 @@
 	};
 
 	var search = function search() {
-	    var mask = searchInput.value;
+	    var mask = searchInput.value.toLowerCase();
 
 	    (0, _utils.clearClassList)(svgContentG);
 	    highlighted.forEach(_utils.clearClassList);
 	    highlighted.length = 0;
 
 	    if (mask !== "") {
-	        (function () {
-	            var path = mask.split("");
-	            var nodes = (0, _utils.bfsForNodes)(dictionary.root, path.shift());
-	            if (nodes.length) {
-	                svgContentG.classList.add('grey-out');
-	            }
-	            nodes.forEach(function (node) {
-	                var lPath = path.slice(0);
+	        var path = mask.split("");
+	        svgContentG.classList.add('grey-out');
 
-	                if (lPath.length) {
-	                    var nodeList = (0, _utils.getSuitableNode)(node, lPath);
-	                    if (nodeList.length) {
-	                        (0, _utils.getPathForNode)(node).forEach(function (node) {
-	                            return highlightNode(node, 'path');
-	                        });
-	                        [node].concat(nodeList).forEach(function (node) {
-	                            return highlightNode(node, 'mask');
-	                        });
-	                        (0, _utils.dfsFromNode)(nodeList[nodeList.length - 1], function (node) {
-	                            return highlightNode(node, 'rest');
-	                        });
-	                    }
-	                } else {
-	                    (0, _utils.getPathForNode)(node).forEach(function (node) {
-	                        return highlightNode(node, 'path');
-	                    });
-	                    highlightNode(node, 'mask');
-	                    (0, _utils.dfsFromNode)(node, function (node) {
-	                        return highlightNode(node, 'rest');
-	                    });
-	                }
+	        (0, _utils.dfsForPath)(dictionary.root, path).forEach(function (nodeList) {
+	            var head = nodeList[nodeList.length - 1];
+	            (0, _utils.getPathForNode)(head).forEach(function (node) {
+	                return highlightNode(node, 'path');
 	            });
-	        })();
+	            nodeList.forEach(function (node) {
+	                return highlightNode(node, 'mask');
+	            });
+
+	            (0, _utils.dfsFromNode)(head, function (node) {
+	                return highlightNode(node, 'rest');
+	            });
+	        });
 	    }
 	};
 
@@ -1235,7 +1218,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.clearClassList = exports.getPathForNode = exports.dfsFromNode = exports.bfsForNodes = exports.getSuitableNode = exports.findApplicable = exports.parseText = exports.handleWord = exports.fill = exports.createNode = undefined;
+	exports.clearClassList = exports.getPathForNode = exports.dfsFromNode = exports.dfsForPath = exports.bfsForNodes = exports.getSuitableNode = exports.findApplicable = exports.parseText = exports.handleWord = exports.fill = exports.createNode = undefined;
 
 	var _toConsumableArray2 = __webpack_require__(7);
 
@@ -1341,6 +1324,53 @@
 	    }
 
 	    return result;
+	};
+
+	var dfsForPath = exports.dfsForPath = function dfsForPath(root, path) {
+	    var originalLenght = path.length;
+	    var results = [];
+	    var accList = [];
+
+	    function bfsForLetter(queue, letter) {
+	        var result = [],
+	            node = void 0;
+
+	        if (letter) {
+	            queue = [].concat(queue);
+	            while (node = queue.shift()) {
+	                var _queue;
+
+	                (_queue = queue).push.apply(_queue, (0, _toConsumableArray3.default)(node.children));
+	                if (node.value === letter) {
+	                    result.push(node);
+	                }
+	            }
+	        }
+
+	        return result;
+	    }
+
+	    function handlePath(nodeList, path, acc) {
+	        var letter = path.shift();
+	        var nodes = bfsForLetter(nodeList, letter);
+
+	        results.push.apply(results, (0, _toConsumableArray3.default)(nodes));
+	        nodes.forEach(function (child) {
+	            var clone = acc.slice(0);
+	            clone.push(child);
+	            accList.push(clone);
+	            accList = accList.filter(function (acc) {
+	                return acc.length === originalLenght;
+	            });
+	            handlePath(child.children, path.slice(0), clone);
+	        });
+	    }
+
+	    handlePath(root.children, path, []);
+
+	    return accList.filter(function (acc) {
+	        return acc.length === originalLenght;
+	    });
 	};
 
 	var dfsFromNode = exports.dfsFromNode = function dfsFromNode(root, handler) {
