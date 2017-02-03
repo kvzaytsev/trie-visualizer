@@ -24,7 +24,7 @@ textarea {
 
 main {
     font-family: 'Orbitron', sans-serif;
-    height: calc(100vh - 20px);
+    height: calc(100vh);
     display: flex;
 }
 
@@ -76,7 +76,7 @@ svg {
 
 svg text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 18px
+    font-size: 25px;
 }
 
 .grey-out g:not(.found) text {
@@ -90,6 +90,11 @@ svg text {
 
 .found circle {
     opacity: 1;
+}
+
+.path,
+.rest,
+.mask {
 }
 
 .path circle,

@@ -58,7 +58,6 @@ function drawTree(dictionary) {
             let nodeElement = createNodeElement(getX(node),getY(node), node.value);
             node.children.forEach(child => {
                 let line = createLine(getX(node),getY(node),getX(child),getY(child));
-                child.$_l = line;
                 child.$.insertBefore(line, child.$.firstChild);
             });
 
@@ -108,6 +107,7 @@ const search = () => {
       dfsForPath(dictionary.root, path).forEach(nodeList => {
           let head = nodeList[nodeList.length-1];
           getPathForNode(head).forEach(node => highlightNode(node, 'path'));
+          let
           nodeList.forEach(node => highlightNode(node, 'mask'));
 
           dfsFromNode(head, node => highlightNode(node, 'rest'));
