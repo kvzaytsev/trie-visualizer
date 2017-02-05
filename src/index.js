@@ -1,5 +1,5 @@
 import {createGroup, createLine, createTerminator, createNodeElement} from './svg-helper';
-import {breadthFirstTraversal, dfsForPath, getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
+import {getNodesBetween, breadthFirstTraversal, dfsForPath, getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
 import {textMock} from './mocks';
 
 const textArea = document.querySelector('.js-text');
@@ -99,18 +99,38 @@ const search = () => {
     clearClassList(svgContentG);
     highlighted.forEach(clearClassList);
     highlighted.length = 0;
+    resultContainer.innerHTML = "";
 
     if (mask !== "") {
       let path = mask.split("");
       svgContentG.classList.add('grey-out');
 
       dfsForPath(dictionary.root, path).forEach(nodeList => {
+          let tail = nodeList[0];
           let head = nodeList[nodeList.length-1];
-          getPathForNode(head).forEach(node => highlightNode(node, 'path'));
-          let
-          nodeList.forEach(node => highlightNode(node, 'mask'));
+          let betweenList = [];
 
-          dfsFromNode(head, node => highlightNode(node, 'rest'));
+          let beforeTail = getPathForNode(tail);
+          beforeTail.forEach(node => highlightNode(node, 'path'));
+          let wordStart = `<span class="word-regular">${beforeTail.map(n => n.value).join('')}</span>`;
+          wordStart += `<span class="word-target">${tail.value}</span>`;
+          nodeList.reverse().reduce((below, above) => {
+            let betweens = getNodesBetween(below, above);
+            betweenList.push(...betweens);
+            wordStart += `<span class="word-regular">${betweens.map(n => n.value).join('')}</span>`;
+            wordStart += `<span class="word-target">${below.value}</span>`;
+            return above;
+          })
+
+          betweenList.forEach(node => highlightNode(node, 'path'));
+
+          nodeList.forEach(node => highlightNode(node, 'mask'));
+          dfsFromNode(head).forEach(path => {
+            path.forEach(node => highlightNode(node, 'rest'));
+            let wordDiv = document.createElement('div');
+            wordDiv.innerHTML = wordStart + `<span class="word-regular">${path.map(n => n.value).join('')}</span>`;
+            resultContainer.appendChild(wordDiv);
+          });
       });
   }
 };

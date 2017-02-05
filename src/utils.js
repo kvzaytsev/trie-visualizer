@@ -133,12 +133,29 @@ export const dfsForPath = (root, path) => {
     return accList.filter(acc => acc.length === originalLenght);
 };
 
-export const dfsFromNode = (root, handler) => {
+export const dfsFromNode = (root) => {
+  let acc = [];
+  let path = [];
+
   const handleNode = (node) => {
-    handler(node)
+    path.push(node);
+    node.value === null && acc.push(path.slice(0));
     node.children.forEach(handleNode);
+    path.pop();
   }
+
   handleNode (root);
+  return acc.map(path => path.slice(1));
+}
+
+export const getNodesBetween = (cNode, pNode) => {
+  let parent = cNode.parent;
+  let acc = [];
+  while (parent && parent !== pNode) {
+    acc.push(parent);
+    parent = parent.parent;
+  }
+  return acc;
 }
 
 export const getPathForNode = (node) => {
