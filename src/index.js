@@ -114,12 +114,12 @@ const search = () => {
           beforeTail.forEach(node => highlightNode(node, 'path'));
           let wordStart = `<span class="word-regular">${beforeTail.map(n => n.value).join('')}</span>`;
           wordStart += `<span class="word-target">${tail.value}</span>`;
-          nodeList.reverse().reduce((below, above) => {
+          nodeList.reduce((above, below) => {
             let betweens = getNodesBetween(below, above);
             betweenList.push(...betweens);
-            wordStart += `<span class="word-regular">${betweens.map(n => n.value).join('')}</span>`;
+            wordStart += `<span class="word-regular">${betweens.reverse().map(n => n.value).join('')}</span>`;
             wordStart += `<span class="word-target">${below.value}</span>`;
-            return above;
+            return below;
           })
 
           betweenList.forEach(node => highlightNode(node, 'path'));

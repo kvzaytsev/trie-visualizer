@@ -102,6 +102,10 @@ svg text {
     opacity: 1;
 }
 
+.word-target {
+    color: red;
+}
+
 .path,
 .rest,
 .mask {
