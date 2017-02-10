@@ -15,7 +15,7 @@ export const fill = (list, pNode) => {
 
     if (list.length) {
         fill(list, cNode);
-    } else if (cNode.children.length === 0) {
+    } else /*if (cNode.children.length === 0)*/ {
         let terminator = createNode(null, cNode);
         cNode.children.push(terminator);
     }
@@ -34,47 +34,6 @@ export const parseText = (text) => {
     let tree = {root: createNode("")};
     words.reduce(handleWord, tree);
     return tree;
-};
-
-export const findApplicable = (root) => {
-    let acc = [];
-    let results = [];
-
-    (function handleNode(node) {
-        acc.push(node.value);
-
-        node.children.length
-            ? node.children.forEach(handleNode)
-            : results.push(acc.filter(l => l).join(""));
-
-        acc.pop();
-    })(root);
-
-    return results;
-};
-
-export const getSuitableNode = (root, path) => {
-    let finalNode = root;
-    let nodeList = [];
-    (function handleNode(node, subpath) {
-        let step = subpath.shift();
-        let potentialNode = node.children.find(cNode => cNode.value === step);
-
-        if (potentialNode) {
-            nodeList.push(potentialNode);
-            if (subpath.length) {
-                handleNode(potentialNode, subpath);
-            } else {
-                finalNode = potentialNode;
-            }
-        } else {
-            finalNode = null;
-            nodeList.length = 0;
-        }
-
-    })(finalNode, path);
-
-    return nodeList;
 };
 
 export const bfsForNodes = (root, letter) => {

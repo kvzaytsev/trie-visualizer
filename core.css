@@ -1,6 +1,10 @@
 body {
     padding: 0;
     margin: 0;
+
+    height: calc(100vh);
+    display: flex;
+    flex-direction: column;
 }
 
 textarea {
@@ -29,8 +33,8 @@ textarea {
 
 main {
     font-family: 'Open Sans', sans-serif;
-    height: calc(100vh);
     display: flex;
+    flex: 1;
 }
 
 section {
@@ -84,9 +88,19 @@ svg {
     width: 100%;
 }
 
+svg circle {
+    fill: #4390bc;
+    stroke: #4390bc;
+}
+
+svg line {
+    stroke: #4390bc;
+}
+
 svg text {
     font-family: 'Orbitron', sans-serif;
     font-size: 25px;
+    fill: white;
 }
 
 .grey-out g:not(.found) text {
@@ -95,7 +109,8 @@ svg text {
 
 .grey-out g:not(.found) line,
 .grey-out g:not(.found) circle {
-    stroke: #ccc;
+    stroke: #8dbdd8;
+    fill: #8dbdd8;
 }
 
 .found circle {
@@ -106,9 +121,10 @@ svg text {
     color: red;
 }
 
-.path,
-.rest,
-.mask {
+.path line,
+.rest line,
+.mask line {
+    filter: url(#dropShadow);
 }
 
 .path circle,
@@ -125,14 +141,13 @@ svg text {
     stroke-width: 2px;
 }
 
+.rest circle,
 .path circle {
-  stroke: blue;
-}
-
-.rest circle {
-  stroke: green;
+  stroke: #43990F;
+  fill: #43990F;
 }
 
 .mask circle {
-  stroke: red;
+  stroke: #650000;
+  fill: #650000;
 }

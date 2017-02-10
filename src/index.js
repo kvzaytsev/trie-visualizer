@@ -1,5 +1,5 @@
 import {createGroup, createLine, createTerminator, createNodeElement} from './svg-helper';
-import {getNodesBetween, breadthFirstTraversal, dfsForPath, getPathForNode, dfsFromNode, bfsForNodes, getSuitableNode, findApplicable, parseText, handleWord, fill, createNode, clearClassList} from './utils';
+import {getNodesBetween, breadthFirstTraversal, dfsForPath, getPathForNode, dfsFromNode, bfsForNodes, parseText, handleWord, fill, createNode, clearClassList} from './utils';
 import {textMock} from './mocks';
 
 const textArea = document.querySelector('.js-text');
@@ -17,15 +17,6 @@ const getY = node => (node.depth-1) * 75 + 50;
 
 let dictionary;
 let highlighted = [];
-
-function * createGenerator() {
-  let i=0;
-  while (true) {
-    yield i++;
-  }
-}
-
-const idGenerator = createGenerator();
 
 function drawTree(dictionary) {
     let linesGroup = createGroup();
@@ -57,7 +48,14 @@ function drawTree(dictionary) {
 
             let nodeElement = createNodeElement(getX(node),getY(node), node.value);
             node.children.forEach(child => {
-                let line = createLine(getX(node),getY(node),getX(child),getY(child));
+                let x1 = getX(node),
+                    x2 = getX(child);
+                let line = createLine(
+                    x1,
+                    getY(node),
+                    x2 === x1 ? x1 + 1 : x2,
+                    getY(child)
+                );
                 child.$.insertBefore(line, child.$.firstChild);
             });
 
