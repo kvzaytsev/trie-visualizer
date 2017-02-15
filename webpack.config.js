@@ -1,22 +1,21 @@
 var Webpack = require('webpack');
 
 module.exports = {
-    devtools: 'inline-source-map',
-
+    devtool: "inline-source-map",
     entry: "./src/index.js",
     output: {
-        path: './',
+        path: '/',
         filename: "./dist/bundle.js"
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
-                loader: 'babel'
+                loader: "babel-loader", // Do not use "use" here
+                options: {}
             }
         ]
     }
-
 };

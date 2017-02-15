@@ -91,6 +91,7 @@ svg {
 svg circle {
     fill: #4390bc;
     stroke: #4390bc;
+    transform-origin: center;
 }
 
 svg line {
@@ -130,8 +131,9 @@ svg text {
 .path circle,
 .rest circle,
 .mask circle {
-    transform-origin: center;
     transform: scale(1.2);
+    transition-property: transform;
+    transition-duration: .5s;
     filter: url(#dropShadow);
 }
 

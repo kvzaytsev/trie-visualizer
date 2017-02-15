@@ -1,40 +1,6 @@
-export const createNode = (value, parent = null) => ({
-    children: [],
-    value: value,
-    parent: parent
-});
 
-export const fill = (list, pNode) => {
-    let letter = list.shift();
-    let cNode = pNode.children.find(child => child.value === letter);
 
-    if (!cNode) {
-        cNode = createNode(letter, pNode);
-        pNode.children.push(cNode);
-    }
 
-    if (list.length) {
-        fill(list, cNode);
-    } else /*if (cNode.children.length === 0)*/ {
-        let terminator = createNode(null, cNode);
-        cNode.children.push(terminator);
-    }
-};
-
-export const handleWord = (tree, word) => {
-    if (word) {
-      let letters = word.split('');
-      fill(letters, tree.root);
-    }
-    return tree;
-};
-
-export const parseText = (text) => {
-    let words = text.split(/\s+/);
-    let tree = {root: createNode("")};
-    words.reduce(handleWord, tree);
-    return tree;
-};
 
 export const bfsForNodes = (root, letter) => {
     let queue = [].concat(root.children),
@@ -43,7 +9,7 @@ export const bfsForNodes = (root, letter) => {
 
     while (node = queue.shift()) {
         queue.push(...node.children);
-        if (node.value === letter){
+        if (node.value === letter) {
             result.push(node);
         }
     }
@@ -52,7 +18,7 @@ export const bfsForNodes = (root, letter) => {
 };
 
 export const dfsForPath = (root, path) => {
-    let originalLenght = path.length;
+    let originalLength = path.length;
     let results = [];
     let accList = [];
 
@@ -64,7 +30,7 @@ export const dfsForPath = (root, path) => {
             queue = [].concat(queue);
             while (node = queue.shift()) {
                 queue.push(...node.children);
-                if (node.value === letter){
+                if (node.value === letter) {
                     result.push(node);
                 }
             }
@@ -80,48 +46,48 @@ export const dfsForPath = (root, path) => {
         results.push(...nodes);
         nodes.forEach(child => {
             let clone = acc.slice(0);
-            clone.push(child)
+            clone.push(child);
             accList.push(clone);
-            accList = accList.filter(acc => acc.length === originalLenght);
+            accList = accList.filter(acc => acc.length === originalLength);
             handlePath(child.children, path.slice(0), clone);
         });
     }
 
     handlePath(root.children, path, []);
 
-    return accList.filter(acc => acc.length === originalLenght);
+    return accList.filter(acc => acc.length === originalLength);
 };
 
 export const dfsFromNode = (root) => {
-  let acc = [];
-  let path = [];
+    let acc = [];
+    let path = [];
 
-  const handleNode = (node) => {
-    path.push(node);
-    node.value === null && acc.push(path.slice(0));
-    node.children.forEach(handleNode);
-    path.pop();
-  }
+    const handleNode = (node) => {
+        path.push(node);
+        node.value === null && acc.push(path.slice(0));
+        node.children.forEach(handleNode);
+        path.pop();
+    }
 
-  handleNode (root);
-  return acc.map(path => path.slice(1));
+    handleNode(root);
+    return acc.map(path => path.slice(1));
 }
 
 export const getNodesBetween = (cNode, pNode) => {
-  let parent = cNode.parent;
-  let acc = [];
-  while (parent && parent !== pNode) {
-    acc.push(parent);
-    parent = parent.parent;
-  }
-  return acc;
+    let parent = cNode.parent;
+    let acc = [];
+    while (parent && parent !== pNode) {
+        acc.push(parent);
+        parent = parent.parent;
+    }
+    return acc;
 }
 
 export const getPathForNode = (node) => {
     let acc = [],
         parent;
 
-    while(parent = node.parent) {
+    while (parent = node.parent) {
         acc.unshift(parent);
         node = parent;
     }
@@ -133,4 +99,4 @@ export const clearClassList = element => {
     let acc = [];
     element.classList.forEach(c => acc.push(c));
     acc.forEach(c => element.classList.remove(c));
-}
+};

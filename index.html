@@ -9,55 +9,54 @@
     <link rel="stylesheet" href="core.css">
 </head>
 <body>
-    <header>
-        <div class="text-source">
-            <label class="text-label">Text</label>
-            <textarea id="text-box" class="js-text">cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel</textarea>
-        </div>
-    </header>
-    <main>
-        <section class="trie-section">
-            <div class="trie-wrapper">
-              <div class="trie-label">Trie</div>
-              <div class="trie-container">
-                  <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      version="1.1"
-                      class="js-tree-svg">
+<header>
+    <!-- <div class="text-source">
+        <label class="text-label">Text</label>
+        <textarea id="text-box" class="js-text">cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel</textarea>
+    </div> -->
+</header>
+<main>
+    <section class="trie-section">
+        <div class="trie-wrapper">
+            <div class="trie-label">Trie</div>
+            <div class="trie-container">
+                <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        version="1.1"
+                        class="js-tree-svg">
 
-                      <defs>
-                          <filter id="dropShadow" x="-50%" y="-50%" width="250%" height="250%">
-                              <!-- <feOffset in="SourceGraphic" result="the-shadow" dx="5" dy="5"/> -->
-                          	<feGaussianBlur in="SourceAlpha" result="blur-out" stdDeviation="4" />
-                          	<feOffset in="blur-out" result="the-shadow" dx="5" dy="5"/>
-                          	<feColorMatrix in="the-shadow" result="color-out" type="matrix"
-                            		values="0 0 0 0   0
+                    <defs>
+                        <filter id="dropShadow" x="-50%" y="-50%" width="250%" height="250%">
+                            <!-- <feOffset in="SourceGraphic" result="the-shadow" dx="5" dy="5"/> -->
+                            <feGaussianBlur in="SourceAlpha" result="blur-out" stdDeviation="4"/>
+                            <feOffset in="blur-out" result="the-shadow" dx="5" dy="5"/>
+                            <feColorMatrix in="the-shadow" result="color-out" type="matrix"
+                                           values="0 0 0 0   0
                                   		    0 0 0 0   0
                                     		0 0 0 0   0
                                     		0 0 0 .5  0"/>
-                          	<feBlend in="SourceGraphic" in2="the-shadow" mode="normal"/>
-                        	</filter>
-                      </defs>
-                      <g class="js-tree-content"/>
-                  </svg>
-              </div>
-          </div>
-        </section>
-
-        <section class="search-section">
-            <div class="search-container">
-                <label class="search-label" for="search-input">Fuzzy search</label>
-                <input id="search-input" class="search-input js-input" type="text">
+                            <feBlend in="SourceGraphic" in2="the-shadow" mode="normal"/>
+                        </filter>
+                    </defs>
+                    <g class="js-tree-content"/>
+                </svg>
             </div>
-            <div class="result-container">
-                <label class="result-label">Search Results</label>
-                <div class="result-list js-result"></div>
-            </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
+    <section class="search-section">
+        <div class="search-container">
+            <label class="search-label" for="search-input">Fuzzy search</label>
+            <input id="search-input" class="search-input js-input" type="text">
+        </div>
+        <div class="result-container">
+            <label class="result-label">Search Results</label>
+            <div class="result-list js-result"></div>
+        </div>
+    </section>
 
-    <script src="./dist/bundle.js"></script>
+</main>
+
+<script src="./dist/bundle.js"></script>
 </body>
 </html>
