@@ -37,7 +37,7 @@ export const drawTree = (dictionary, svgContentG, svg) => {
                 let line = createLine(
                     x1,
                     getY(node),
-                    x2 === x1 ? x1 + 1 : x2,
+                    x2 === x1 ? x1 + 0.5  : x2,
                     getY(child)
                 );
                 child.$.insertBefore(line, child.$.firstChild);

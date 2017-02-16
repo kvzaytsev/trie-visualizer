@@ -1,7 +1,3 @@
-
-
-
-
 export const bfsForNodes = (root, letter) => {
     let queue = [].concat(root.children),
         result = [],

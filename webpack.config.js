@@ -1,11 +1,11 @@
-var Webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
-    devtool: "inline-source-map",
+    devtool: "source-map",
     entry: "./src/index.js",
     output: {
-        path: '/',
-        filename: "./dist/bundle.js"
+        path: path.resolve(__dirname, "dist"),
+        filename: "bundle.js"
     },
 
     module: {

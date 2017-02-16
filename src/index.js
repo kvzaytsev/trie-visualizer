@@ -1,10 +1,18 @@
 import Rx, {Observable} from 'rxjs';
-import {drawTree, highlightNode, clearHighlighted} from './graphics/graphics';
+import React from 'react';
+import ReactDOM from 'react-dom'
+import {Provider} from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+
+import {highlightNode, clearHighlighted} from './graphics/graphics';
 import {getNodesBetween, dfsForPath, getPathForNode, dfsFromNode, clearClassList} from './utils';
 import {parseText} from './tree-utils';
-import store from './store';
 import {createTrie, search} from './action-creators';
 import {textMock} from  './mocks';
+import ACTION_TYPES from './action-types';
+
+import store from './store';
+import App from './components/app'
 
 const textArea = document.querySelector('.js-text');
 const resultContainer = document.querySelector('.js-result');
@@ -15,14 +23,21 @@ const svgContentG = document.querySelector('.js-tree-content');
 const searchInput$ = Observable.fromEvent(searchInput, 'input');
 const textArea$ = Observable.fromEvent(textArea, 'input');
 
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.querySelector('.root')
+);
+
 const start = text => store.dispatch(createTrie(parseText(text)));
 
-store.subscribe((data) => {
-    let state = store.getState();
-    svgContentG.innerHTML = "";
-    drawTree(state.trie, svgContentG, svg);
-    doSearch(searchInput.value.toLowerCase());
-});
+// store.subscribe(() => {
+//     let state = store.getState();
+//     svgContentG.innerHTML = "";
+//     drawTree(state.trie, svgContentG, svg);
+//     doSearch(searchInput.value.toLowerCase());
+// });
 
 const doSearch = mask => {
     clearClassList(svgContentG);
@@ -64,11 +79,5 @@ const doSearch = mask => {
     }
 };
 
-searchInput$.subscribe(() => store.dispatch(search(searchInput.value.toLowerCase())));
+
 start(textMock);
-
-// textArea$.subscribe(() => {
-//     start(textMock);
-//     search(searchInput.value.toLowerCase());
-// });
-
