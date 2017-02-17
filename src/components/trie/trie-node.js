@@ -1,13 +1,30 @@
 import React from 'react';
 
+import NodeLink from './node-link';
+
 const trieNode = (props) => {
+    let classes = props.highlight
+        ? `found ${props.highlight}`
+        : '';
+
     return (
-        <g>
+        <g
+            id={props.id}
+            className={classes}
+        >
+            {
+                props.line && <NodeLink
+                    x1={props.x}
+                    y1={props.y}
+                    x2={props.line.x2}
+                    y2={props.line.y2}
+                />
+            }
             {
                 props.line && <line
-                    x1={props.line.x1}
+                    x1={props.x}
+                    y1={props.y}
                     x2={props.line.x2}
-                    y1={props.line.y1}
                     y2={props.line.y2}
                     stroke="black"
                     strokeWidth="1"/>

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import Trie from './trie';
+import Trie from './trie/trie.js';
+import Search from './search';
 
 class Application extends Component {
     constructor(props) {
@@ -10,7 +11,10 @@ class Application extends Component {
 
     render() {
         return (
-            <Trie/>
+            <div className="app-root">
+                <Trie/>
+                <Search />
+            </div>
         );
     }
 }

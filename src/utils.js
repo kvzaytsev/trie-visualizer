@@ -63,11 +63,11 @@ export const dfsFromNode = (root) => {
         node.value === null && acc.push(path.slice(0));
         node.children.forEach(handleNode);
         path.pop();
-    }
+    };
 
     handleNode(root);
     return acc.map(path => path.slice(1));
-}
+};
 
 export const getNodesBetween = (cNode, pNode) => {
     let parent = cNode.parent;
@@ -77,7 +77,7 @@ export const getNodesBetween = (cNode, pNode) => {
         parent = parent.parent;
     }
     return acc;
-}
+};
 
 export const getPathForNode = (node) => {
     let acc = [],
@@ -89,10 +89,4 @@ export const getPathForNode = (node) => {
     }
 
     return acc.filter(letter => letter);
-}
-
-export const clearClassList = element => {
-    let acc = [];
-    element.classList.forEach(c => acc.push(c));
-    acc.forEach(c => element.classList.remove(c));
 };

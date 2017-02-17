@@ -26,9 +26,9 @@ textarea {
 }
 
 .search-input {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 20px;
-  padding: 5px 5px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    padding: 5px 5px;
 }
 
 main {
@@ -78,9 +78,9 @@ section {
 }
 
 .trie-container {
-  flex-grow: 1;
-  text-align: center;
-  border: 1px solid #ccc;
+    flex-grow: 1;
+    text-align: center;
+    border: 1px solid #ccc;
 }
 
 svg {
@@ -114,6 +114,16 @@ svg text {
     fill: #8dbdd8;
 }
 
+.looser text {
+    fill: #eee;
+}
+
+.looser line,
+.looser circle {
+    stroke: #8dbdd8;
+    fill: #8dbdd8;
+}
+
 .found circle {
     opacity: 1;
 }
@@ -126,6 +136,8 @@ svg text {
 .rest line,
 .mask line {
     filter: url(#dropShadow);
+    stroke: #43990F;
+    fill: #43990F;
 }
 
 .path circle,
@@ -145,11 +157,25 @@ svg text {
 
 .rest circle,
 .path circle {
-  stroke: #43990F;
-  fill: #43990F;
+    stroke: #43990F;
+    fill: #43990F;
 }
 
 .mask circle {
-  stroke: #650000;
-  fill: #650000;
+    stroke: #650000;
+    fill: #650000;
+}
+
+.trie-search {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.root {
+    height: 99vh;
+}
+
+.app-root {
+    height: 100%;
 }
