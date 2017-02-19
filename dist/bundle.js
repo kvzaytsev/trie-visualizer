@@ -11012,8 +11012,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var textMock1 = "cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel";
-var textMock = exports.textMock = "ca cb";
+var textMock = exports.textMock = "cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel";
+var textMock1 = exports.textMock1 = "ca cb cd";
 
 /***/ }),
 /* 148 */
@@ -11269,32 +11269,28 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var pointD = 6;
+var pointD = 5;
 
 var nodeLink = function nodeLink(props) {
     var acc = [];
-    var distance = Math.sqrt(Math.pow(props.x2 - props.x1, 2) + Math.pow(props.y2 - props.y1, 2)) - 50;
-    var count = Math.round((distance - 5) / 10);
+    var distance = Math.sqrt(Math.pow(props.x2 - props.x1, 2) + Math.pow(props.y2 - props.y1, 2));
+    var countTotal = Math.floor(distance / pointD);
 
-    for (var i = 1; i < count; i++) {
-        var x0 = Math.min(props.x1, props.x2);
-        var y0 = Math.min(props.y1, props.y2);
-
-        var x = props.x2 + 25 + i * (props.x1 - props.x2) / count;
-        var y = props.y2 + 25 + i * (props.y1 - props.y2) / count;
-
-        acc.push([x, y]);
+    for (var i = 0; i < countTotal; i++) {
+        acc.push([props.x2 + (props.x1 - props.x2) / countTotal * i, props.y2 + (props.y1 - props.y2) / countTotal * i]);
     }
 
     return _react2.default.createElement(
         "g",
         null,
-        acc.map(function (_ref) {
+        acc.filter(function (v, i) {
+            return i % 2 === 0;
+        }).map(function (_ref) {
             var _ref2 = (0, _slicedToArray3.default)(_ref, 2),
                 x = _ref2[0],
                 y = _ref2[1];
 
-            return _react2.default.createElement("circle", { cx: x, cy: y, r: "5", strokeWidth: "1", stroke: "black" });
+            return _react2.default.createElement("circle", { cx: x, cy: y, r: "2", strokeWidth: "1", stroke: "black" });
         })
     );
 };
@@ -11316,6 +11312,10 @@ var _react = __webpack_require__(10);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _nodeLink = __webpack_require__(154);
+
+var _nodeLink2 = _interopRequireDefault(_nodeLink);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var terminator = function terminator(props) {
@@ -11327,6 +11327,12 @@ var terminator = function terminator(props) {
             id: props.id,
             className: classes
         },
+        false && _react2.default.createElement(_nodeLink2.default, {
+            x1: props.x,
+            y1: props.y,
+            x2: props.line.x2,
+            y2: props.line.y2
+        }),
         props.line && _react2.default.createElement('line', {
             x1: props.x,
             y1: props.y,
@@ -11376,6 +11382,16 @@ var trieDefinitions = function trieDefinitions(props) {
             _react2.default.createElement("feGaussianBlur", { "in": "SourceAlpha", result: "blur-out", stdDeviation: "4" }),
             _react2.default.createElement("feOffset", { "in": "blur-out", result: "the-shadow", dx: "5", dy: "5" }),
             _react2.default.createElement("feColorMatrix", { "in": "the-shadow", result: "color-out", type: "matrix",
+                values: " 0 0 0 0   0\r 0 0 0 0   0\r 0 0 0 0   0\r 0 0 0 .8  0" }),
+            _react2.default.createElement("feBlend", { "in": "SourceGraphic", in2: "the-shadow", mode: "normal" })
+        ),
+        _react2.default.createElement(
+            "filter",
+            { id: "dropShadowSmall", x: "-50%", y: "-50%", width: "250%", height: "250%" },
+            _react2.default.createElement("feOffset", { "in": "SourceGraphic", result: "the-shadow", dx: "2", dy: "2" }),
+            _react2.default.createElement("feGaussianBlur", { "in": "SourceAlpha", result: "blur-out", stdDeviation: "1" }),
+            _react2.default.createElement("feOffset", { "in": "blur-out", result: "the-shadow", dx: "2", dy: "2" }),
+            _react2.default.createElement("feColorMatrix", { "in": "the-shadow", result: "color-out", type: "matrix",
                 values: " 0 0 0 0   0\r 0 0 0 0   0\r 0 0 0 0   0\r 0 0 0 .5  0" }),
             _react2.default.createElement("feBlend", { "in": "SourceGraphic", in2: "the-shadow", mode: "normal" })
         )
@@ -11414,7 +11430,7 @@ var trieNode = function trieNode(props) {
             id: props.id,
             className: classes
         },
-        props.line && _react2.default.createElement(_nodeLink2.default, {
+        false && _react2.default.createElement(_nodeLink2.default, {
             x1: props.x,
             y1: props.y,
             x2: props.line.x2,
@@ -11538,7 +11554,7 @@ var Trie = function (_Component) {
                     'g',
                     { className: this.props._mask ? 'grey-out' : '' },
                     trieParams.nodeList.map(function (child, idx) {
-                        return child.type === 'terminator' ? _react2.default.createElement(_terminator2.default, { id: child.key, key: child.key, x: child.x, y: child.y, line: child.line, highlight: child.highlight }) : _react2.default.createElement(_trieNode2.default, { id: child.key, key: child.key, x: child.x, y: child.y, value: child.value, line: child.line, highlight: child.highlight });
+                        return child.type === 'terminator' ? Trie.createTerminator(child) : Trie.createChildNode(child);
                     }),
                     ';'
                 )
@@ -11637,6 +11653,31 @@ var Trie = function (_Component) {
             });
         }
     }], [{
+        key: 'createTerminator',
+        value: function createTerminator(child) {
+            return _react2.default.createElement(_terminator2.default, {
+                id: child.key,
+                key: child.key,
+                x: child.x,
+                y: child.y,
+                line: child.line,
+                highlight: child.highlight
+            });
+        }
+    }, {
+        key: 'createChildNode',
+        value: function createChildNode(child) {
+            return _react2.default.createElement(_trieNode2.default, {
+                id: child.key,
+                key: child.key,
+                x: child.x,
+                y: child.y,
+                value: child.value,
+                line: child.line,
+                highlight: child.highlight
+            });
+        }
+    }, {
         key: 'addHighlighting',
         value: function addHighlighting(node, value) {
             switch (value) {

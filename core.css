@@ -135,18 +135,17 @@ svg text {
 .path line,
 .rest line,
 .mask line {
-    filter: url(#dropShadow);
-    stroke: #43990F;
+    /*stroke: #43990F;*/
+    stroke:  #650000;
     fill: #43990F;
 }
 
 .path circle,
 .rest circle,
 .mask circle {
-    transform: scale(1.2);
-    transition-property: transform;
-    transition-duration: .5s;
-    filter: url(#dropShadow);
+    /*transform: scale(1.2);*/
+    /*transition-property: filter;*/
+    /*transition-duration: .5s;*/
 }
 
 .path line,
@@ -157,8 +156,16 @@ svg text {
 
 .rest circle,
 .path circle {
-    stroke: #43990F;
-    fill: #43990F;
+    /*stroke: #43990F;*/
+    stroke: #650000;
+    stroke-width: 4;
+    fill: white;
+    /*fill: #43990F;*/
+}
+
+.rest text,
+.path text {
+    fill: #650000;
 }
 
 .mask circle {

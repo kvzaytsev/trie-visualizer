@@ -13,7 +13,7 @@ const trieNode = (props) => {
             className={classes}
         >
             {
-                props.line && <NodeLink
+                false && <NodeLink
                     x1={props.x}
                     y1={props.y}
                     x2={props.line.x2}

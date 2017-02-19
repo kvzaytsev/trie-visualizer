@@ -1,5 +1,7 @@
 import React from 'react';
 
+import NodeLink from './node-link';
+
 const terminator = (props) => {
     let classes = props.highlight
         ? `found ${props.highlight}`
@@ -10,6 +12,14 @@ const terminator = (props) => {
             id={props.id}
             className={classes}
         >
+            {
+                false && <NodeLink
+                    x1={props.x}
+                    y1={props.y}
+                    x2={props.line.x2}
+                    y2={props.line.y2}
+                />
+            }
             {
                 props.line && <line
                     x1={props.x}

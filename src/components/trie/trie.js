@@ -30,8 +30,8 @@ class Trie extends Component {
                 <g className={this.props._mask ? 'grey-out' : ''}>
                     {trieParams.nodeList.map((child, idx) =>
                         child.type === 'terminator'
-                            ? <Terminator id={child.key} key={child.key} x={child.x} y={child.y} line={child.line} highlight={child.highlight}/>
-                            : <TrieNode id={child.key} key={child.key} x={child.x} y={child.y} value={child.value} line={child.line} highlight={child.highlight}/>
+                            ? Trie.createTerminator(child)
+                            : Trie.createChildNode(child)
                     )};
                 </g>
             </svg>
@@ -115,6 +115,33 @@ class Trie extends Component {
             dfsFromNode(head).forEach(path => path.forEach(node => Trie.addHighlighting(node.$, 'path')));
 
         });
+    }
+
+    static createTerminator(child) {
+        return (
+            <Terminator
+                id={child.key}
+                key={child.key}
+                x={child.x}
+                y={child.y}
+                line={child.line}
+                highlight={child.highlight}
+            />
+        );
+    }
+
+    static createChildNode(child) {
+        return (
+            <TrieNode
+                id={child.key}
+                key={child.key}
+                x={child.x}
+                y={child.y}
+                value={child.value}
+                line={child.line}
+                highlight={child.highlight}
+            />
+        );
     }
 
     static addHighlighting(node, value) {
