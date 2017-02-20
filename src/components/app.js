@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 import Trie from './trie/trie.js';
 import Search from './search';
+import SourceText from './source-text';
 
 class Application extends Component {
     constructor(props) {
@@ -12,8 +13,11 @@ class Application extends Component {
     render() {
         return (
             <div className="app-root">
+                <div className="app-header">
+                    <SourceText />
+                    <Search />
+                </div>
                 <Trie/>
-                <Search />
             </div>
         );
     }

@@ -2,10 +2,62 @@ body {
     padding: 0;
     margin: 0;
 
-    height: calc(100vh);
+    height: 100vh;
+
+}
+
+.app-root {
     display: flex;
     flex-direction: column;
 }
+
+.app-header {
+    display: flex;
+}
+
+.trie-source-text {
+    margin: 10px;
+    position: relative;
+    flex: 5;
+}
+
+.trie-source-text__input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #4390bc;
+    padding: 5px 30px 5px 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+svg.trie-search__icon circle {
+    fill: white;
+}
+
+.trie-search {
+    margin: 10px;
+    position: relative;
+    flex: 1;
+}
+
+.trie-search__input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #4390bc;
+    padding: 5px 30px 5px 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.trie-search__icon {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    height: 24px;
+    width: 24px;
+}
+
+
 
 textarea {
     width: 100%;
@@ -29,16 +81,6 @@ textarea {
     font-family: 'Open Sans', sans-serif;
     font-size: 20px;
     padding: 5px 5px;
-}
-
-main {
-    font-family: 'Open Sans', sans-serif;
-    display: flex;
-    flex: 1;
-}
-
-section {
-    padding: 4px;
 }
 
 .search-section {
@@ -173,30 +215,7 @@ svg text {
     fill: #650000;
 }
 
-.trie-search {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
 
-.trie-search__input {
-    border: none;
-    border-bottom: 2px solid #4390bc;
-    padding: 5px;
-    font-size: 16px;    
-}
-
-.trie-search__icon {
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    height: 24px;
-    width: 24px;
-}
-
-svg.trie-search__icon circle {
-    fill: white;
-}
 
 .root {
     height: 99vh;

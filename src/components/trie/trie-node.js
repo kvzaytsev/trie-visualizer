@@ -2,12 +2,10 @@ import React from 'react';
 
 import NodeLink from './node-link';
 
-const trieNode = (props, context) => {
+const trieNode = (props) => {
     let classes = props.highlight
         ? `found ${props.highlight}`
         : '';
-
-    console.log(context);
 
     return (
         <g

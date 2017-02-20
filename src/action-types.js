@@ -1,6 +1,7 @@
 const ACTION_TYPES = {
     CREATE_TRIE: 'CREATE.TRIE',
-    SEARCH: 'SEARCH'
+    SEARCH: 'SEARCH',
+    TEXT_CHANGED: 'TEXT.CHANGED'
 };
 
 export default ACTION_TYPES;
