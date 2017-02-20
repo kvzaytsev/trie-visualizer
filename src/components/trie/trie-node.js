@@ -2,10 +2,12 @@ import React from 'react';
 
 import NodeLink from './node-link';
 
-const trieNode = (props) => {
+const trieNode = (props, context) => {
     let classes = props.highlight
         ? `found ${props.highlight}`
         : '';
+
+    console.log(context);
 
     return (
         <g
@@ -27,7 +29,8 @@ const trieNode = (props) => {
                     x2={props.line.x2}
                     y2={props.line.y2}
                     stroke="black"
-                    strokeWidth="1"/>
+                    strokeWidth="1"
+                />
             }
             <circle
                 stroke="black"

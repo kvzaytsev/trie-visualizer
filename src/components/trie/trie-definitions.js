@@ -11,7 +11,7 @@ const trieDefinitions = (props) => {
                                values=" 0 0 0 0   0
                                         0 0 0 0   0
                                         0 0 0 0   0
-                                        0 0 0 .8  0"/>
+                                        0 0 0 .5  0"/>
                 <feBlend in="SourceGraphic" in2="the-shadow" mode="normal"/>
             </filter>
             <filter id="dropShadowSmall" x="-50%" y="-50%" width="250%" height="250%">

@@ -122,10 +122,7 @@ class Trie extends Component {
             <Terminator
                 id={child.key}
                 key={child.key}
-                x={child.x}
-                y={child.y}
-                line={child.line}
-                highlight={child.highlight}
+                {...child}
             />
         );
     }
@@ -135,11 +132,7 @@ class Trie extends Component {
             <TrieNode
                 id={child.key}
                 key={child.key}
-                x={child.x}
-                y={child.y}
-                value={child.value}
-                line={child.line}
-                highlight={child.highlight}
+                {...child}
             />
         );
     }

@@ -20,7 +20,7 @@ const nodeLink = (props) => {
                 acc
                     .filter((v,i) => i % 2 === 0)
                     .map(([x,y]) =>
-                       <circle cx={x} cy={y} r="2" strokeWidth="1" stroke="black"/>
+                       <circle cx={x} cy={y} r="1" strokeWidth="1" stroke="black"/>
                     )
             }
         </g>

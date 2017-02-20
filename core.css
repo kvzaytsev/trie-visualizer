@@ -179,6 +179,25 @@ svg text {
     right: 20px;
 }
 
+.trie-search__input {
+    border: none;
+    border-bottom: 2px solid #4390bc;
+    padding: 5px;
+    font-size: 16px;    
+}
+
+.trie-search__icon {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    height: 24px;
+    width: 24px;
+}
+
+svg.trie-search__icon circle {
+    fill: white;
+}
+
 .root {
     height: 99vh;
 }
