@@ -32,7 +32,7 @@ class SourceTextDialog extends Component {
                         Close
                     </button>
                     <div className="source-text-dialog__content">
-                        <label htmlFor="source-text"> Text</label>
+                        <label htmlFor="source-text">Source Text</label>
                         <textarea
                             id="source-text"
                             ref={input => this.textArea = input}

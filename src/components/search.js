@@ -40,9 +40,10 @@ class Search extends Component {
                     width="24"
                     viewBox="0 0 100 100"
                     className="trie-search__icon"
+                    stroke="#4390bc"
                 >
-                    <circle r="30" cx="60" cy="40" stroke="#4390bc" fill="white" strokeWidth="14"/>
-                    <line x1="5" y1="95" x2="35" y2="65" stroke="#4390bc" strokeWidth="14" strokeLinecap="round"/>
+                    <circle r="30" cx="60" cy="40" stroke="inherit" fill="white" strokeWidth="14"/>
+                    <line x1="5" y1="95" x2="35" y2="65" stroke="inherit" strokeWidth="14" strokeLinecap="round"/>
                 </svg>
             </div>
         );

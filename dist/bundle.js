@@ -16757,10 +16757,11 @@ var Search = function (_Component) {
                         height: '24',
                         width: '24',
                         viewBox: '0 0 100 100',
-                        className: 'trie-search__icon'
+                        className: 'trie-search__icon',
+                        stroke: '#4390bc'
                     },
-                    _react2.default.createElement('circle', { r: '30', cx: '60', cy: '40', stroke: '#4390bc', fill: 'white', strokeWidth: '14' }),
-                    _react2.default.createElement('line', { x1: '5', y1: '95', x2: '35', y2: '65', stroke: '#4390bc', strokeWidth: '14', strokeLinecap: 'round' })
+                    _react2.default.createElement('circle', { r: '30', cx: '60', cy: '40', stroke: 'inherit', fill: 'white', strokeWidth: '14' }),
+                    _react2.default.createElement('line', { x1: '5', y1: '95', x2: '35', y2: '65', stroke: 'inherit', strokeWidth: '14', strokeLinecap: 'round' })
                 )
             );
         }
@@ -16872,7 +16873,7 @@ var SourceTextDialog = function (_Component) {
                         _react2.default.createElement(
                             'label',
                             { htmlFor: 'source-text' },
-                            ' Text'
+                            'Source Text'
                         ),
                         _react2.default.createElement(
                             'textarea',

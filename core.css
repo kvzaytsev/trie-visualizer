@@ -1,9 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-
     height: 100vh;
-
 }
 
 .app-root {
@@ -49,6 +47,11 @@ body {
     background-color: #406e97;
 }
 
+.trie-source-text__btn:active {
+    border: 2px solid #2F4A64;
+    background-color: #2F4A64;
+}
+
 .trie-source-text__btn:hover circle {
     fill: white;
 }
@@ -64,6 +67,12 @@ svg.trie-search__icon circle {
     position: relative;
     flex: 1;
 }
+
+.trie-search__input:focus + svg,
+.trie-search:hover * {
+    stroke: #406e97;
+}
+
 
 .trie-search__input {
     width: 100%;
@@ -186,18 +195,21 @@ svg.trie-search__icon circle {
     background-color: #406e97;
 }
 
+.dialog-btn:active {
+    background-color: #2F4A64;
+}
 
-svg circle {
+.trie-svg circle {
     fill: #4390bc;
     stroke: #4390bc;
     transform-origin: center;
 }
 
-svg line {
+.trie-svg line {
     stroke: #4390bc;
 }
 
-svg text {
+.trie-svg text {
     font-family: 'Orbitron', sans-serif;
     font-size: 25px;
     fill: white;
