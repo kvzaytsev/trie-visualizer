@@ -13,14 +13,6 @@ const terminator = (props) => {
             className={classes}
         >
             {
-                false && <NodeLink
-                    x1={props.x}
-                    y1={props.y}
-                    x2={props.line.x2}
-                    y2={props.line.y2}
-                />
-            }
-            {
                 props.line && <line
                     x1={props.x}
                     y1={props.y}
