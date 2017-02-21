@@ -41,6 +41,16 @@ body {
     border: 2px solid #4390bc;
     background: none;
     padding: 0 6px;
+    cursor: pointer;
+}
+
+.trie-source-text__btn:hover {
+    border: 2px solid #406e97;
+    background-color: #406e97;
+}
+
+.trie-source-text__btn:hover circle {
+    fill: white;
 }
 
 svg.trie-search__icon circle {
