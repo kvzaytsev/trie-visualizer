@@ -115,7 +115,7 @@ var Observable = (function () {
             operator.call(sink, this.source);
         }
         else {
-            sink.add(this._subscribe(sink));
+            sink.add(this._trySubscribe(sink));
         }
         if (sink.syncErrorThrowable) {
             sink.syncErrorThrowable = false;
@@ -124,6 +124,16 @@ var Observable = (function () {
             }
         }
         return sink;
+    };
+    Observable.prototype._trySubscribe = function (sink) {
+        try {
+            return this._subscribe(sink);
+        }
+        catch (err) {
+            sink.syncErrorThrown = true;
+            sink.syncErrorValue = err;
+            sink.error(err);
+        }
     };
     /**
      * @method forEach
@@ -398,7 +408,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var isFunction_1 = __webpack_require__(131);
+var isFunction_1 = __webpack_require__(86);
 var Subscription_1 = __webpack_require__(10);
 var Observer_1 = __webpack_require__(186);
 var rxSubscriber_1 = __webpack_require__(81);
@@ -1252,7 +1262,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var isArray_1 = __webpack_require__(25);
 var isObject_1 = __webpack_require__(210);
-var isFunction_1 = __webpack_require__(131);
+var isFunction_1 = __webpack_require__(86);
 var tryCatch_1 = __webpack_require__(15);
 var errorObject_1 = __webpack_require__(13);
 var UnsubscriptionError_1 = __webpack_require__(208);
@@ -1559,6 +1569,14 @@ var Subject = (function (_super) {
         this.isStopped = true;
         this.closed = true;
         this.observers = null;
+    };
+    Subject.prototype._trySubscribe = function (subscriber) {
+        if (this.closed) {
+            throw new ObjectUnsubscribedError_1.ObjectUnsubscribedError();
+        }
+        else {
+            return _super.prototype._trySubscribe.call(this, subscriber);
+        }
     };
     Subject.prototype._subscribe = function (subscriber) {
         if (this.closed) {
@@ -2087,7 +2105,7 @@ module.exports = { debugTool: debugTool };
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store      = __webpack_require__(96)('wks')
+var store      = __webpack_require__(97)('wks')
   , uid        = __webpack_require__(70)
   , Symbol     = __webpack_require__(29).Symbol
   , USE_SYMBOL = typeof Symbol == 'function';
@@ -2731,7 +2749,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Observable_1 = __webpack_require__(0);
-var ScalarObservable_1 = __webpack_require__(124);
+var ScalarObservable_1 = __webpack_require__(125);
 var EmptyObservable_1 = __webpack_require__(32);
 var isScheduler_1 = __webpack_require__(33);
 /**
@@ -2853,7 +2871,7 @@ exports.ArrayObservable = ArrayObservable;
 
 var global    = __webpack_require__(29)
   , core      = __webpack_require__(18)
-  , ctx       = __webpack_require__(88)
+  , ctx       = __webpack_require__(89)
   , hide      = __webpack_require__(44)
   , PROTOTYPE = 'prototype';
 
@@ -2928,7 +2946,7 @@ if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 
 var anObject       = __webpack_require__(35)
   , IE8_DOM_DEFINE = __webpack_require__(139)
-  , toPrimitive    = __webpack_require__(98)
+  , toPrimitive    = __webpack_require__(99)
   , dP             = Object.defineProperty;
 
 exports.f = __webpack_require__(36) ? Object.defineProperty : function defineProperty(O, P, Attributes){
@@ -3310,7 +3328,7 @@ module.exports = function(it, key){
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = __webpack_require__(140)
-  , defined = __webpack_require__(89);
+  , defined = __webpack_require__(90);
 module.exports = function(it){
   return IObject(defined(it));
 };
@@ -3455,7 +3473,7 @@ var _assign = __webpack_require__(8);
 var ReactCurrentOwner = __webpack_require__(24);
 
 var warning = __webpack_require__(4);
-var canDefineProperty = __webpack_require__(121);
+var canDefineProperty = __webpack_require__(122);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 var REACT_ELEMENT_TYPE = __webpack_require__(178);
@@ -3895,10 +3913,10 @@ module.exports = {};
 
 
 
-var DOMNamespaces = __webpack_require__(104);
+var DOMNamespaces = __webpack_require__(105);
 var setInnerHTML = __webpack_require__(77);
 
-var createMicrosoftUnsafeLocalFunction = __webpack_require__(111);
+var createMicrosoftUnsafeLocalFunction = __webpack_require__(112);
 var setTextContent = __webpack_require__(174);
 
 var ELEMENT_NODE_TYPE = 1;
@@ -4195,7 +4213,7 @@ module.exports = ReactReconciler;
 var _assign = __webpack_require__(8);
 
 var ReactChildren = __webpack_require__(396);
-var ReactComponent = __webpack_require__(118);
+var ReactComponent = __webpack_require__(119);
 var ReactPureComponent = __webpack_require__(400);
 var ReactClass = __webpack_require__(397);
 var ReactDOMFactories = __webpack_require__(398);
@@ -4463,7 +4481,7 @@ module.exports = function(it){
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys       = __webpack_require__(145)
-  , enumBugKeys = __webpack_require__(90);
+  , enumBugKeys = __webpack_require__(91);
 
 module.exports = Object.keys || function keys(O){
   return $keys(O, enumBugKeys);
@@ -4528,8 +4546,8 @@ module.exports = emptyObject;
 var _prodInvariant = __webpack_require__(7);
 
 var EventPluginRegistry = __webpack_require__(72);
-var EventPluginUtils = __webpack_require__(105);
-var ReactErrorUtils = __webpack_require__(109);
+var EventPluginUtils = __webpack_require__(106);
+var ReactErrorUtils = __webpack_require__(110);
 
 var accumulateInto = __webpack_require__(168);
 var forEachAccumulated = __webpack_require__(169);
@@ -4810,7 +4828,7 @@ module.exports = EventPluginHub;
 
 
 var EventPluginHub = __webpack_require__(59);
-var EventPluginUtils = __webpack_require__(105);
+var EventPluginUtils = __webpack_require__(106);
 
 var accumulateInto = __webpack_require__(168);
 var forEachAccumulated = __webpack_require__(169);
@@ -5004,7 +5022,7 @@ module.exports = ReactInstanceMap;
 
 var SyntheticEvent = __webpack_require__(26);
 
-var getEventTarget = __webpack_require__(114);
+var getEventTarget = __webpack_require__(115);
 
 /**
  * @interface UIEvent
@@ -5465,7 +5483,7 @@ exports.f = {}.propertyIsEnumerable;
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.13 ToObject(argument)
-var defined = __webpack_require__(89);
+var defined = __webpack_require__(90);
 module.exports = function(it){
   return Object(defined(it));
 };
@@ -5788,7 +5806,7 @@ var ReactEventEmitterMixin = __webpack_require__(351);
 var ViewportMetrics = __webpack_require__(167);
 
 var getVendorPrefixedEventName = __webpack_require__(387);
-var isEventSupported = __webpack_require__(115);
+var isEventSupported = __webpack_require__(116);
 
 /**
  * Summary of `ReactBrowserEventEmitter` event handling:
@@ -6117,7 +6135,7 @@ module.exports = ReactBrowserEventEmitter;
 var SyntheticUIEvent = __webpack_require__(62);
 var ViewportMetrics = __webpack_require__(167);
 
-var getEventModifierState = __webpack_require__(113);
+var getEventModifierState = __webpack_require__(114);
 
 /**
  * @interface MouseEvent
@@ -6551,12 +6569,12 @@ module.exports = escapeTextContentForBrowser;
 
 
 var ExecutionEnvironment = __webpack_require__(11);
-var DOMNamespaces = __webpack_require__(104);
+var DOMNamespaces = __webpack_require__(105);
 
 var WHITESPACE_TEST = /^[ \r\n\t\f]/;
 var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
 
-var createMicrosoftUnsafeLocalFunction = __webpack_require__(111);
+var createMicrosoftUnsafeLocalFunction = __webpack_require__(112);
 
 // SVG temp container for IE lacking innerHTML
 var reusableSVGContainer;
@@ -6661,13 +6679,13 @@ var AsyncSubject = (function (_super) {
         this.hasCompleted = false;
     }
     AsyncSubject.prototype._subscribe = function (subscriber) {
-        if (this.hasCompleted && this.hasNext) {
-            subscriber.next(this.value);
-            subscriber.complete();
+        if (this.hasError) {
+            subscriber.error(this.thrownError);
             return Subscription_1.Subscription.EMPTY;
         }
-        else if (this.hasError) {
-            subscriber.error(this.thrownError);
+        else if (this.hasCompleted && this.hasNext) {
+            subscriber.next(this.value);
+            subscriber.complete();
             return Subscription_1.Subscription.EMPTY;
         }
         return _super.prototype._subscribe.call(this, subscriber);
@@ -6676,6 +6694,11 @@ var AsyncSubject = (function (_super) {
         if (!this.hasCompleted) {
             this.value = value;
             this.hasNext = true;
+        }
+    };
+    AsyncSubject.prototype.error = function (error) {
+        if (!this.hasCompleted) {
+            _super.prototype.error.call(this, error);
         }
     };
     AsyncSubject.prototype.complete = function () {
@@ -6966,6 +6989,18 @@ exports.isDate = isDate;
 
 "use strict";
 
+function isFunction(x) {
+    return typeof x === 'function';
+}
+exports.isFunction = isFunction;
+//# sourceMappingURL=isFunction.js.map
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -6992,7 +7027,9 @@ var fill = function fill(list, pNode) {
 
     if (list.length) {
         fill(list, cNode);
-    } else if (cNode.children.length === 0) {
+    } else if (cNode.children.length === 0 || cNode.children.reduce(function (res, child) {
+        return res && child.value !== null;
+    }, true)) {
         var terminator = createNode(null, cNode);
         cNode.children.push(terminator);
     }
@@ -7014,7 +7051,7 @@ var parseText = exports.parseText = function parseText(text) {
 };
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -7024,7 +7061,7 @@ module.exports = function(it){
 };
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
@@ -7049,7 +7086,7 @@ module.exports = function(fn, that, length){
 };
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports) {
 
 // 7.2.1 RequireObjectCoercible(argument)
@@ -7059,7 +7096,7 @@ module.exports = function(it){
 };
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -7068,20 +7105,20 @@ module.exports = (
 ).split(',');
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 module.exports = true;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject    = __webpack_require__(35)
   , dPs         = __webpack_require__(267)
-  , enumBugKeys = __webpack_require__(90)
-  , IE_PROTO    = __webpack_require__(95)('IE_PROTO')
+  , enumBugKeys = __webpack_require__(91)
+  , IE_PROTO    = __webpack_require__(96)('IE_PROTO')
   , Empty       = function(){ /* empty */ }
   , PROTOTYPE   = 'prototype';
 
@@ -7121,13 +7158,13 @@ module.exports = Object.create || function create(O, Properties){
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(30).f
@@ -7139,17 +7176,17 @@ module.exports = function(it, tag, stat){
 };
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(96)('keys')
+var shared = __webpack_require__(97)('keys')
   , uid    = __webpack_require__(70);
 module.exports = function(key){
   return shared[key] || (shared[key] = uid(key));
 };
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(29)
@@ -7160,7 +7197,7 @@ module.exports = function(key){
 };
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 // 7.1.4 ToInteger
@@ -7171,7 +7208,7 @@ module.exports = function(it){
 };
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
@@ -7188,13 +7225,13 @@ module.exports = function(it, S){
 };
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global         = __webpack_require__(29)
   , core           = __webpack_require__(18)
-  , LIBRARY        = __webpack_require__(91)
-  , wksExt         = __webpack_require__(100)
+  , LIBRARY        = __webpack_require__(92)
+  , wksExt         = __webpack_require__(101)
   , defineProperty = __webpack_require__(30).f;
 module.exports = function(name){
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -7202,13 +7239,13 @@ module.exports = function(name){
 };
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.f = __webpack_require__(21);
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(276);
@@ -7226,7 +7263,7 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 }
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7299,7 +7336,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7320,7 +7357,7 @@ var Danger = __webpack_require__(324);
 var ReactDOMComponentTree = __webpack_require__(9);
 var ReactInstrumentation = __webpack_require__(20);
 
-var createMicrosoftUnsafeLocalFunction = __webpack_require__(111);
+var createMicrosoftUnsafeLocalFunction = __webpack_require__(112);
 var setInnerHTML = __webpack_require__(77);
 var setTextContent = __webpack_require__(174);
 
@@ -7530,7 +7567,7 @@ module.exports = DOMChildrenOperations;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7555,7 +7592,7 @@ var DOMNamespaces = {
 module.exports = DOMNamespaces;
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7573,7 +7610,7 @@ module.exports = DOMNamespaces;
 
 var _prodInvariant = __webpack_require__(7);
 
-var ReactErrorUtils = __webpack_require__(109);
+var ReactErrorUtils = __webpack_require__(110);
 
 var invariant = __webpack_require__(3);
 var warning = __webpack_require__(4);
@@ -7787,7 +7824,7 @@ module.exports = EventPluginUtils;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7851,7 +7888,7 @@ var KeyEscapeUtils = {
 module.exports = KeyEscapeUtils;
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7992,7 +8029,7 @@ module.exports = LinkedValueUtils;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8044,7 +8081,7 @@ module.exports = ReactComponentEnvironment;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8127,7 +8164,7 @@ module.exports = ReactErrorUtils;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8359,7 +8396,7 @@ module.exports = ReactUpdateQueue;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8396,7 +8433,7 @@ var createMicrosoftUnsafeLocalFunction = function (func) {
 module.exports = createMicrosoftUnsafeLocalFunction;
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8451,7 +8488,7 @@ function getEventCharCode(nativeEvent) {
 module.exports = getEventCharCode;
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8499,7 +8536,7 @@ function getEventModifierState(nativeEvent) {
 module.exports = getEventModifierState;
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8539,7 +8576,7 @@ function getEventTarget(nativeEvent) {
 module.exports = getEventTarget;
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8604,7 +8641,7 @@ function isEventSupported(eventNameSuffix, capture) {
 module.exports = isEventSupported;
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8651,7 +8688,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 module.exports = shouldUpdateReactComponent;
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9039,7 +9076,7 @@ module.exports = validateDOMNesting;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9057,9 +9094,9 @@ module.exports = validateDOMNesting;
 
 var _prodInvariant = __webpack_require__(41);
 
-var ReactNoopUpdateQueue = __webpack_require__(119);
+var ReactNoopUpdateQueue = __webpack_require__(120);
 
-var canDefineProperty = __webpack_require__(121);
+var canDefineProperty = __webpack_require__(122);
 var emptyObject = __webpack_require__(58);
 var invariant = __webpack_require__(3);
 var warning = __webpack_require__(4);
@@ -9163,7 +9200,7 @@ module.exports = ReactComponent;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9265,7 +9302,7 @@ module.exports = ReactNoopUpdateQueue;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9296,7 +9333,7 @@ module.exports = ReactPropTypeLocationNames;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9328,7 +9365,7 @@ module.exports = canDefineProperty;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9374,7 +9411,7 @@ function getIteratorFn(maybeIterable) {
 module.exports = getIteratorFn;
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9387,7 +9424,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Subject_1 = __webpack_require__(12);
 var queue_1 = __webpack_require__(204);
 var Subscription_1 = __webpack_require__(10);
-var observeOn_1 = __webpack_require__(128);
+var observeOn_1 = __webpack_require__(129);
 var ObjectUnsubscribedError_1 = __webpack_require__(84);
 var SubjectSubscription_1 = __webpack_require__(187);
 /**
@@ -9482,7 +9519,7 @@ var ReplayEvent = (function () {
 //# sourceMappingURL=ReplaySubject.js.map
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9546,7 +9583,7 @@ exports.ScalarObservable = ScalarObservable;
 //# sourceMappingURL=ScalarObservable.js.map
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9617,7 +9654,7 @@ function combineLatest() {
     // if the first and only other argument besides the resultSelector is an array
     // assume it's been called with `combineLatest([obs1, obs2, obs3], project)`
     if (observables.length === 1 && isArray_1.isArray(observables[0])) {
-        observables = observables[0];
+        observables = observables[0].slice();
     }
     observables.unshift(this);
     return this.lift.call(new ArrayObservable_1.ArrayObservable(observables), new CombineLatestOperator(project));
@@ -9704,7 +9741,7 @@ exports.CombineLatestSubscriber = CombineLatestSubscriber;
 //# sourceMappingURL=combineLatest.js.map
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9840,7 +9877,7 @@ exports.concatStatic = concatStatic;
 //# sourceMappingURL=concat.js.map
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9933,7 +9970,7 @@ var MapSubscriber = (function (_super) {
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10018,7 +10055,7 @@ exports.ObserveOnMessage = ObserveOnMessage;
 //# sourceMappingURL=observeOn.js.map
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10066,7 +10103,7 @@ var Subscriber_1 = __webpack_require__(2);
  * @see {@link mergeScan}
  * @see {@link scan}
  *
- * @param {function(acc: R, value: T): R} accumulator The accumulator function
+ * @param {function(acc: R, value: T, index: number): R} accumulator The accumulator function
  * called on each source value.
  * @param {R} [seed] The initial accumulation value.
  * @return {Observable<R>} An observable of the accumulated values.
@@ -10112,8 +10149,12 @@ var ReduceSubscriber = (function (_super) {
         _super.call(this, destination);
         this.accumulator = accumulator;
         this.hasSeed = hasSeed;
+        this.index = 0;
         this.hasValue = false;
         this.acc = seed;
+        if (!this.hasSeed) {
+            this.index++;
+        }
     }
     ReduceSubscriber.prototype._next = function (value) {
         if (this.hasValue || (this.hasValue = this.hasSeed)) {
@@ -10127,7 +10168,7 @@ var ReduceSubscriber = (function (_super) {
     ReduceSubscriber.prototype._tryReduce = function (value) {
         var result;
         try {
-            result = this.accumulator(this.acc, value);
+            result = this.accumulator(this.acc, value, this.index++);
         }
         catch (err) {
             this.destination.error(err);
@@ -10147,7 +10188,7 @@ exports.ReduceSubscriber = ReduceSubscriber;
 //# sourceMappingURL=reduce.js.map
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10428,18 +10469,6 @@ var ZipBufferIterator = (function (_super) {
 //# sourceMappingURL=zip.js.map
 
 /***/ }),
-/* 131 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function isFunction(x) {
-    return typeof x === 'function';
-}
-exports.isFunction = isFunction;
-//# sourceMappingURL=isFunction.js.map
-
-/***/ }),
 /* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10578,7 +10607,7 @@ exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.d
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(87)
+var cof = __webpack_require__(88)
   , TAG = __webpack_require__(21)('toStringTag')
   // ES3 wrong here
   , ARG = cof(function(){ return arguments; }()) == 'Arguments';
@@ -10626,7 +10655,7 @@ module.exports = !__webpack_require__(36) && !__webpack_require__(43)(function()
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(87);
+var cof = __webpack_require__(88);
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
@@ -10637,14 +10666,14 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 
 "use strict";
 
-var LIBRARY        = __webpack_require__(91)
+var LIBRARY        = __webpack_require__(92)
   , $export        = __webpack_require__(28)
   , redefine       = __webpack_require__(146)
   , hide           = __webpack_require__(44)
   , has            = __webpack_require__(37)
   , Iterators      = __webpack_require__(45)
   , $iterCreate    = __webpack_require__(261)
-  , setToStringTag = __webpack_require__(94)
+  , setToStringTag = __webpack_require__(95)
   , getPrototypeOf = __webpack_require__(144)
   , ITERATOR       = __webpack_require__(21)('iterator')
   , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
@@ -10714,7 +10743,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED
 var pIE            = __webpack_require__(68)
   , createDesc     = __webpack_require__(57)
   , toIObject      = __webpack_require__(38)
-  , toPrimitive    = __webpack_require__(98)
+  , toPrimitive    = __webpack_require__(99)
   , has            = __webpack_require__(37)
   , IE8_DOM_DEFINE = __webpack_require__(139)
   , gOPD           = Object.getOwnPropertyDescriptor;
@@ -10734,7 +10763,7 @@ exports.f = __webpack_require__(36) ? gOPD : function getOwnPropertyDescriptor(O
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
 var $keys      = __webpack_require__(145)
-  , hiddenKeys = __webpack_require__(90).concat('length', 'prototype');
+  , hiddenKeys = __webpack_require__(91).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
   return $keys(O, hiddenKeys);
@@ -10747,7 +10776,7 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 var has         = __webpack_require__(37)
   , toObject    = __webpack_require__(69)
-  , IE_PROTO    = __webpack_require__(95)('IE_PROTO')
+  , IE_PROTO    = __webpack_require__(96)('IE_PROTO')
   , ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function(O){
@@ -10765,7 +10794,7 @@ module.exports = Object.getPrototypeOf || function(O){
 var has          = __webpack_require__(37)
   , toIObject    = __webpack_require__(38)
   , arrayIndexOf = __webpack_require__(254)(false)
-  , IE_PROTO     = __webpack_require__(95)('IE_PROTO');
+  , IE_PROTO     = __webpack_require__(96)('IE_PROTO');
 
 module.exports = function(object, names){
   var O      = toIObject(object)
@@ -10791,7 +10820,7 @@ module.exports = __webpack_require__(44);
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.15 ToLength
-var toInteger = __webpack_require__(97)
+var toInteger = __webpack_require__(98)
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -11633,7 +11662,7 @@ module.exports = ReactDOMComponentFlags;
 
 var _assign = __webpack_require__(8);
 
-var LinkedValueUtils = __webpack_require__(107);
+var LinkedValueUtils = __webpack_require__(108);
 var ReactDOMComponentTree = __webpack_require__(9);
 var ReactUpdates = __webpack_require__(23);
 
@@ -12117,14 +12146,14 @@ var ReactInstanceMap = __webpack_require__(61);
 var ReactInstrumentation = __webpack_require__(20);
 var ReactMarkupChecksum = __webpack_require__(356);
 var ReactReconciler = __webpack_require__(47);
-var ReactUpdateQueue = __webpack_require__(110);
+var ReactUpdateQueue = __webpack_require__(111);
 var ReactUpdates = __webpack_require__(23);
 
 var emptyObject = __webpack_require__(58);
 var instantiateReactComponent = __webpack_require__(172);
 var invariant = __webpack_require__(3);
 var setInnerHTML = __webpack_require__(77);
-var shouldUpdateReactComponent = __webpack_require__(116);
+var shouldUpdateReactComponent = __webpack_require__(117);
 var warning = __webpack_require__(4);
 
 var ATTR_NAME = DOMProperty.ID_ATTRIBUTE_NAME;
@@ -13173,7 +13202,7 @@ var REACT_ELEMENT_TYPE = __webpack_require__(350);
 
 var getIteratorFn = __webpack_require__(384);
 var invariant = __webpack_require__(3);
-var KeyEscapeUtils = __webpack_require__(106);
+var KeyEscapeUtils = __webpack_require__(107);
 var warning = __webpack_require__(4);
 
 var SEPARATOR = '.';
@@ -13434,8 +13463,8 @@ var ReactElement = __webpack_require__(40);
 
 var checkReactTypeSpec = __webpack_require__(402);
 
-var canDefineProperty = __webpack_require__(121);
-var getIteratorFn = __webpack_require__(122);
+var canDefineProperty = __webpack_require__(122);
+var getIteratorFn = __webpack_require__(123);
 var warning = __webpack_require__(4);
 
 function getDeclarationErrorAddendum() {
@@ -14333,7 +14362,7 @@ var ArrayObservable_1 = __webpack_require__(27);
 var ArrayLikeObservable_1 = __webpack_require__(538);
 var iterator_1 = __webpack_require__(66);
 var Observable_1 = __webpack_require__(0);
-var observeOn_1 = __webpack_require__(128);
+var observeOn_1 = __webpack_require__(129);
 var observable_1 = __webpack_require__(80);
 var isArrayLike = (function (x) { return x && typeof x.length === 'number'; });
 /**
@@ -14585,7 +14614,7 @@ var tryCatch_1 = __webpack_require__(15);
 var errorObject_1 = __webpack_require__(13);
 var Observable_1 = __webpack_require__(0);
 var Subscriber_1 = __webpack_require__(2);
-var map_1 = __webpack_require__(127);
+var map_1 = __webpack_require__(128);
 function getCORSRequest() {
     if (root_1.root.XMLHttpRequest) {
         var xhr = new root_1.root.XMLHttpRequest();
@@ -16823,7 +16852,7 @@ var _actionTypes = __webpack_require__(34);
 
 var _actionTypes2 = _interopRequireDefault(_actionTypes);
 
-var _treeUtils = __webpack_require__(86);
+var _treeUtils = __webpack_require__(87);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17271,7 +17300,7 @@ var _trieNode2 = _interopRequireDefault(_trieNode);
 
 var _utils = __webpack_require__(230);
 
-var _treeUtils = __webpack_require__(86);
+var _treeUtils = __webpack_require__(87);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17821,7 +17850,7 @@ module.exports = __webpack_require__(18).Array.from;
 /* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(101);
+__webpack_require__(102);
 __webpack_require__(71);
 module.exports = __webpack_require__(273);
 
@@ -17829,7 +17858,7 @@ module.exports = __webpack_require__(273);
 /* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(101);
+__webpack_require__(102);
 __webpack_require__(71);
 module.exports = __webpack_require__(274);
 
@@ -17889,8 +17918,8 @@ module.exports = __webpack_require__(18).Symbol;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(71);
-__webpack_require__(101);
-module.exports = __webpack_require__(100).f('iterator');
+__webpack_require__(102);
+module.exports = __webpack_require__(101).f('iterator');
 
 /***/ }),
 /* 252 */
@@ -17953,7 +17982,7 @@ module.exports = function(object, index, value){
 
 // all enumerable object keys, includes symbols
 var getKeys = __webpack_require__(56)
-  , gOPS    = __webpack_require__(93)
+  , gOPS    = __webpack_require__(94)
   , pIE     = __webpack_require__(68);
 module.exports = function(it){
   var result     = getKeys(it)
@@ -17991,7 +18020,7 @@ module.exports = function(it){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.2 IsArray(argument)
-var cof = __webpack_require__(87);
+var cof = __webpack_require__(88);
 module.exports = Array.isArray || function isArray(arg){
   return cof(arg) == 'Array';
 };
@@ -18019,9 +18048,9 @@ module.exports = function(iterator, fn, value, entries){
 
 "use strict";
 
-var create         = __webpack_require__(92)
+var create         = __webpack_require__(93)
   , descriptor     = __webpack_require__(57)
-  , setToStringTag = __webpack_require__(94)
+  , setToStringTag = __webpack_require__(95)
   , IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
@@ -18147,7 +18176,7 @@ var meta = module.exports = {
 
 // 19.1.2.1 Object.assign(target, source, ...)
 var getKeys  = __webpack_require__(56)
-  , gOPS     = __webpack_require__(93)
+  , gOPS     = __webpack_require__(94)
   , pIE      = __webpack_require__(68)
   , toObject = __webpack_require__(69)
   , IObject  = __webpack_require__(140)
@@ -18252,7 +18281,7 @@ module.exports = {
   set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
     function(test, buggy, set){
       try {
-        set = __webpack_require__(88)(Function.call, __webpack_require__(142).f(Object.prototype, '__proto__').set, 2);
+        set = __webpack_require__(89)(Function.call, __webpack_require__(142).f(Object.prototype, '__proto__').set, 2);
         set(test, []);
         buggy = !(test instanceof Array);
       } catch(e){ buggy = true; }
@@ -18270,8 +18299,8 @@ module.exports = {
 /* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(97)
-  , defined   = __webpack_require__(89);
+var toInteger = __webpack_require__(98)
+  , defined   = __webpack_require__(90);
 // true  -> String#at
 // false -> String#codePointAt
 module.exports = function(TO_STRING){
@@ -18292,7 +18321,7 @@ module.exports = function(TO_STRING){
 /* 272 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(97)
+var toInteger = __webpack_require__(98)
   , max       = Math.max
   , min       = Math.min;
 module.exports = function(index, length){
@@ -18332,7 +18361,7 @@ module.exports = __webpack_require__(18).isIterable = function(it){
 
 "use strict";
 
-var ctx            = __webpack_require__(88)
+var ctx            = __webpack_require__(89)
   , $export        = __webpack_require__(28)
   , toObject       = __webpack_require__(69)
   , call           = __webpack_require__(260)
@@ -18425,7 +18454,7 @@ $export($export.S + $export.F, 'Object', {assign: __webpack_require__(266)});
 
 var $export = __webpack_require__(28)
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-$export($export.S, 'Object', {create: __webpack_require__(92)});
+$export($export.S, 'Object', {create: __webpack_require__(93)});
 
 /***/ }),
 /* 279 */
@@ -18477,20 +18506,20 @@ var global         = __webpack_require__(29)
   , redefine       = __webpack_require__(146)
   , META           = __webpack_require__(265).KEY
   , $fails         = __webpack_require__(43)
-  , shared         = __webpack_require__(96)
-  , setToStringTag = __webpack_require__(94)
+  , shared         = __webpack_require__(97)
+  , setToStringTag = __webpack_require__(95)
   , uid            = __webpack_require__(70)
   , wks            = __webpack_require__(21)
-  , wksExt         = __webpack_require__(100)
-  , wksDefine      = __webpack_require__(99)
+  , wksExt         = __webpack_require__(101)
+  , wksDefine      = __webpack_require__(100)
   , keyOf          = __webpack_require__(264)
   , enumKeys       = __webpack_require__(256)
   , isArray        = __webpack_require__(259)
   , anObject       = __webpack_require__(35)
   , toIObject      = __webpack_require__(38)
-  , toPrimitive    = __webpack_require__(98)
+  , toPrimitive    = __webpack_require__(99)
   , createDesc     = __webpack_require__(57)
-  , _create        = __webpack_require__(92)
+  , _create        = __webpack_require__(93)
   , gOPNExt        = __webpack_require__(268)
   , $GOPD          = __webpack_require__(142)
   , $DP            = __webpack_require__(30)
@@ -18619,9 +18648,9 @@ if(!USE_NATIVE){
   $DP.f   = $defineProperty;
   __webpack_require__(143).f = gOPNExt.f = $getOwnPropertyNames;
   __webpack_require__(68).f  = $propertyIsEnumerable;
-  __webpack_require__(93).f = $getOwnPropertySymbols;
+  __webpack_require__(94).f = $getOwnPropertySymbols;
 
-  if(DESCRIPTORS && !__webpack_require__(91)){
+  if(DESCRIPTORS && !__webpack_require__(92)){
     redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
   }
 
@@ -18708,13 +18737,13 @@ setToStringTag(global.JSON, 'JSON', true);
 /* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(99)('asyncIterator');
+__webpack_require__(100)('asyncIterator');
 
 /***/ }),
 /* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(99)('observable');
+__webpack_require__(100)('observable');
 
 /***/ }),
 /* 286 */
@@ -20804,8 +20833,8 @@ var ReactDOMComponentTree = __webpack_require__(9);
 var ReactUpdates = __webpack_require__(23);
 var SyntheticEvent = __webpack_require__(26);
 
-var getEventTarget = __webpack_require__(114);
-var isEventSupported = __webpack_require__(115);
+var getEventTarget = __webpack_require__(115);
+var isEventSupported = __webpack_require__(116);
 var isTextInputElement = __webpack_require__(173);
 
 var eventTypes = {
@@ -21633,8 +21662,8 @@ module.exports = HTMLDOMPropertyConfig;
 var ReactReconciler = __webpack_require__(47);
 
 var instantiateReactComponent = __webpack_require__(172);
-var KeyEscapeUtils = __webpack_require__(106);
-var shouldUpdateReactComponent = __webpack_require__(116);
+var KeyEscapeUtils = __webpack_require__(107);
+var shouldUpdateReactComponent = __webpack_require__(117);
 var traverseAllChildren = __webpack_require__(175);
 var warning = __webpack_require__(4);
 
@@ -21790,7 +21819,7 @@ module.exports = ReactChildReconciler;
 
 
 
-var DOMChildrenOperations = __webpack_require__(103);
+var DOMChildrenOperations = __webpack_require__(104);
 var ReactDOMIDOperations = __webpack_require__(337);
 
 /**
@@ -21829,9 +21858,9 @@ var _prodInvariant = __webpack_require__(7),
     _assign = __webpack_require__(8);
 
 var React = __webpack_require__(48);
-var ReactComponentEnvironment = __webpack_require__(108);
+var ReactComponentEnvironment = __webpack_require__(109);
 var ReactCurrentOwner = __webpack_require__(24);
-var ReactErrorUtils = __webpack_require__(109);
+var ReactErrorUtils = __webpack_require__(110);
 var ReactInstanceMap = __webpack_require__(61);
 var ReactInstrumentation = __webpack_require__(20);
 var ReactNodeTypes = __webpack_require__(165);
@@ -21843,8 +21872,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 var emptyObject = __webpack_require__(58);
 var invariant = __webpack_require__(3);
-var shallowEqual = __webpack_require__(102);
-var shouldUpdateReactComponent = __webpack_require__(116);
+var shallowEqual = __webpack_require__(103);
+var shouldUpdateReactComponent = __webpack_require__(117);
 var warning = __webpack_require__(4);
 
 var CompositeTypes = {
@@ -22858,7 +22887,7 @@ var _prodInvariant = __webpack_require__(7),
 var AutoFocusUtils = __webpack_require__(320);
 var CSSPropertyOperations = __webpack_require__(322);
 var DOMLazyTree = __webpack_require__(46);
-var DOMNamespaces = __webpack_require__(104);
+var DOMNamespaces = __webpack_require__(105);
 var DOMProperty = __webpack_require__(31);
 var DOMPropertyOperations = __webpack_require__(157);
 var EventPluginHub = __webpack_require__(59);
@@ -22877,9 +22906,9 @@ var ReactServerRenderingTransaction = __webpack_require__(362);
 var emptyFunction = __webpack_require__(22);
 var escapeTextContentForBrowser = __webpack_require__(76);
 var invariant = __webpack_require__(3);
-var isEventSupported = __webpack_require__(115);
-var shallowEqual = __webpack_require__(102);
-var validateDOMNesting = __webpack_require__(117);
+var isEventSupported = __webpack_require__(116);
+var shallowEqual = __webpack_require__(103);
+var validateDOMNesting = __webpack_require__(118);
 var warning = __webpack_require__(4);
 
 var Flags = ReactDOMComponentFlags;
@@ -23857,7 +23886,7 @@ module.exports = ReactDOMComponent;
 
 
 
-var validateDOMNesting = __webpack_require__(117);
+var validateDOMNesting = __webpack_require__(118);
 
 var DOC_NODE_TYPE = 9;
 
@@ -23985,7 +24014,7 @@ module.exports = ReactDOMFeatureFlags;
 
 
 
-var DOMChildrenOperations = __webpack_require__(103);
+var DOMChildrenOperations = __webpack_require__(104);
 var ReactDOMComponentTree = __webpack_require__(9);
 
 /**
@@ -24028,7 +24057,7 @@ var _prodInvariant = __webpack_require__(7),
     _assign = __webpack_require__(8);
 
 var DOMPropertyOperations = __webpack_require__(157);
-var LinkedValueUtils = __webpack_require__(107);
+var LinkedValueUtils = __webpack_require__(108);
 var ReactDOMComponentTree = __webpack_require__(9);
 var ReactUpdates = __webpack_require__(23);
 
@@ -24805,13 +24834,13 @@ module.exports = ReactDOMSelection;
 var _prodInvariant = __webpack_require__(7),
     _assign = __webpack_require__(8);
 
-var DOMChildrenOperations = __webpack_require__(103);
+var DOMChildrenOperations = __webpack_require__(104);
 var DOMLazyTree = __webpack_require__(46);
 var ReactDOMComponentTree = __webpack_require__(9);
 
 var escapeTextContentForBrowser = __webpack_require__(76);
 var invariant = __webpack_require__(3);
-var validateDOMNesting = __webpack_require__(117);
+var validateDOMNesting = __webpack_require__(118);
 
 /**
  * Text nodes violate a couple assumptions that React makes about components:
@@ -24975,7 +25004,7 @@ module.exports = ReactDOMTextComponent;
 var _prodInvariant = __webpack_require__(7),
     _assign = __webpack_require__(8);
 
-var LinkedValueUtils = __webpack_require__(107);
+var LinkedValueUtils = __webpack_require__(108);
 var ReactDOMComponentTree = __webpack_require__(9);
 var ReactUpdates = __webpack_require__(23);
 
@@ -26000,7 +26029,7 @@ var PooledClass = __webpack_require__(39);
 var ReactDOMComponentTree = __webpack_require__(9);
 var ReactUpdates = __webpack_require__(23);
 
-var getEventTarget = __webpack_require__(114);
+var getEventTarget = __webpack_require__(115);
 var getUnboundedScrollPosition = __webpack_require__(292);
 
 /**
@@ -26193,8 +26222,8 @@ module.exports = ReactHostOperationHistoryHook;
 
 var DOMProperty = __webpack_require__(31);
 var EventPluginHub = __webpack_require__(59);
-var EventPluginUtils = __webpack_require__(105);
-var ReactComponentEnvironment = __webpack_require__(108);
+var EventPluginUtils = __webpack_require__(106);
+var ReactComponentEnvironment = __webpack_require__(109);
 var ReactEmptyComponent = __webpack_require__(160);
 var ReactBrowserEventEmitter = __webpack_require__(73);
 var ReactHostComponent = __webpack_require__(162);
@@ -26330,7 +26359,7 @@ module.exports = ReactMarkupChecksum;
 
 var _prodInvariant = __webpack_require__(7);
 
-var ReactComponentEnvironment = __webpack_require__(108);
+var ReactComponentEnvironment = __webpack_require__(109);
 var ReactInstanceMap = __webpack_require__(61);
 var ReactInstrumentation = __webpack_require__(20);
 
@@ -26923,7 +26952,7 @@ var ReactBrowserEventEmitter = __webpack_require__(73);
 var ReactInputSelection = __webpack_require__(163);
 var ReactInstrumentation = __webpack_require__(20);
 var Transaction = __webpack_require__(75);
-var ReactUpdateQueue = __webpack_require__(110);
+var ReactUpdateQueue = __webpack_require__(111);
 
 /**
  * Ensures that, when possible, the selection range (currently selected text
@@ -27292,7 +27321,7 @@ module.exports = ReactServerRenderingTransaction;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ReactUpdateQueue = __webpack_require__(110);
+var ReactUpdateQueue = __webpack_require__(111);
 
 var warning = __webpack_require__(4);
 
@@ -27768,7 +27797,7 @@ var SyntheticEvent = __webpack_require__(26);
 
 var getActiveElement = __webpack_require__(151);
 var isTextInputElement = __webpack_require__(173);
-var shallowEqual = __webpack_require__(102);
+var shallowEqual = __webpack_require__(103);
 
 var skipSelectionChangeEvent = ExecutionEnvironment.canUseDOM && 'documentMode' in document && document.documentMode <= 11;
 
@@ -27975,7 +28004,7 @@ var SyntheticUIEvent = __webpack_require__(62);
 var SyntheticWheelEvent = __webpack_require__(377);
 
 var emptyFunction = __webpack_require__(22);
-var getEventCharCode = __webpack_require__(112);
+var getEventCharCode = __webpack_require__(113);
 var invariant = __webpack_require__(3);
 
 /**
@@ -28444,9 +28473,9 @@ module.exports = SyntheticInputEvent;
 
 var SyntheticUIEvent = __webpack_require__(62);
 
-var getEventCharCode = __webpack_require__(112);
+var getEventCharCode = __webpack_require__(113);
 var getEventKey = __webpack_require__(383);
-var getEventModifierState = __webpack_require__(113);
+var getEventModifierState = __webpack_require__(114);
 
 /**
  * @interface KeyboardEvent
@@ -28533,7 +28562,7 @@ module.exports = SyntheticKeyboardEvent;
 
 var SyntheticUIEvent = __webpack_require__(62);
 
-var getEventModifierState = __webpack_require__(113);
+var getEventModifierState = __webpack_require__(114);
 
 /**
  * @interface TouchEvent
@@ -28978,7 +29007,7 @@ module.exports = findDOMNode;
 
 
 
-var KeyEscapeUtils = __webpack_require__(106);
+var KeyEscapeUtils = __webpack_require__(107);
 var traverseAllChildren = __webpack_require__(175);
 var warning = __webpack_require__(4);
 
@@ -29059,7 +29088,7 @@ module.exports = flattenChildren;
 
 
 
-var getEventCharCode = __webpack_require__(112);
+var getEventCharCode = __webpack_require__(113);
 
 /**
  * Normalization of deprecated HTML5 `key` values
@@ -30393,10 +30422,10 @@ module.exports = ReactChildren;
 var _prodInvariant = __webpack_require__(41),
     _assign = __webpack_require__(8);
 
-var ReactComponent = __webpack_require__(118);
+var ReactComponent = __webpack_require__(119);
 var ReactElement = __webpack_require__(40);
-var ReactPropTypeLocationNames = __webpack_require__(120);
-var ReactNoopUpdateQueue = __webpack_require__(119);
+var ReactPropTypeLocationNames = __webpack_require__(121);
+var ReactNoopUpdateQueue = __webpack_require__(120);
 
 var emptyObject = __webpack_require__(58);
 var invariant = __webpack_require__(3);
@@ -31290,11 +31319,11 @@ module.exports = ReactDOMFactories;
 
 
 var ReactElement = __webpack_require__(40);
-var ReactPropTypeLocationNames = __webpack_require__(120);
+var ReactPropTypeLocationNames = __webpack_require__(121);
 var ReactPropTypesSecret = __webpack_require__(180);
 
 var emptyFunction = __webpack_require__(22);
-var getIteratorFn = __webpack_require__(122);
+var getIteratorFn = __webpack_require__(123);
 var warning = __webpack_require__(4);
 
 /**
@@ -31731,8 +31760,8 @@ module.exports = ReactPropTypes;
 
 var _assign = __webpack_require__(8);
 
-var ReactComponent = __webpack_require__(118);
-var ReactNoopUpdateQueue = __webpack_require__(119);
+var ReactComponent = __webpack_require__(119);
+var ReactNoopUpdateQueue = __webpack_require__(120);
 
 var emptyObject = __webpack_require__(58);
 
@@ -31797,7 +31826,7 @@ module.exports = '15.4.2';
 
 var _prodInvariant = __webpack_require__(41);
 
-var ReactPropTypeLocationNames = __webpack_require__(120);
+var ReactPropTypeLocationNames = __webpack_require__(121);
 var ReactPropTypesSecret = __webpack_require__(180);
 
 var invariant = __webpack_require__(3);
@@ -31937,7 +31966,7 @@ var _prodInvariant = __webpack_require__(41);
 var ReactCurrentOwner = __webpack_require__(24);
 var REACT_ELEMENT_TYPE = __webpack_require__(178);
 
-var getIteratorFn = __webpack_require__(122);
+var getIteratorFn = __webpack_require__(123);
 var invariant = __webpack_require__(3);
 var KeyEscapeUtils = __webpack_require__(394);
 var warning = __webpack_require__(4);
@@ -32543,7 +32572,7 @@ var Subscriber_1 = __webpack_require__(2);
 exports.Subscriber = Subscriber_1.Subscriber;
 var AsyncSubject_1 = __webpack_require__(78);
 exports.AsyncSubject = AsyncSubject_1.AsyncSubject;
-var ReplaySubject_1 = __webpack_require__(123);
+var ReplaySubject_1 = __webpack_require__(124);
 exports.ReplaySubject = ReplaySubject_1.ReplaySubject;
 var BehaviorSubject_1 = __webpack_require__(185);
 exports.BehaviorSubject = BehaviorSubject_1.BehaviorSubject;
@@ -33081,7 +33110,7 @@ Observable_1.Observable.prototype.combineAll = combineAll_1.combineAll;
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var combineLatest_1 = __webpack_require__(125);
+var combineLatest_1 = __webpack_require__(126);
 Observable_1.Observable.prototype.combineLatest = combineLatest_1.combineLatest;
 //# sourceMappingURL=combineLatest.js.map
 
@@ -33092,7 +33121,7 @@ Observable_1.Observable.prototype.combineLatest = combineLatest_1.combineLatest;
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var concat_1 = __webpack_require__(126);
+var concat_1 = __webpack_require__(127);
 Observable_1.Observable.prototype.concat = concat_1.concat;
 //# sourceMappingURL=concat.js.map
 
@@ -33425,7 +33454,7 @@ Observable_1.Observable.prototype.letBind = let_1.letProto;
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var map_1 = __webpack_require__(127);
+var map_1 = __webpack_require__(128);
 Observable_1.Observable.prototype.map = map_1.map;
 //# sourceMappingURL=map.js.map
 
@@ -33548,7 +33577,7 @@ Observable_1.Observable.prototype.multicast = multicast_1.multicast;
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var observeOn_1 = __webpack_require__(128);
+var observeOn_1 = __webpack_require__(129);
 Observable_1.Observable.prototype.observeOn = observeOn_1.observeOn;
 //# sourceMappingURL=observeOn.js.map
 
@@ -33658,7 +33687,7 @@ Observable_1.Observable.prototype.race = race_1.race;
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var reduce_1 = __webpack_require__(129);
+var reduce_1 = __webpack_require__(130);
 Observable_1.Observable.prototype.reduce = reduce_1.reduce;
 //# sourceMappingURL=reduce.js.map
 
@@ -34066,7 +34095,7 @@ Observable_1.Observable.prototype.withLatestFrom = withLatestFrom_1.withLatestFr
 "use strict";
 
 var Observable_1 = __webpack_require__(0);
-var zip_1 = __webpack_require__(130);
+var zip_1 = __webpack_require__(131);
 Observable_1.Observable.prototype.zip = zip_1.zipProto;
 //# sourceMappingURL=zip.js.map
 
@@ -34093,7 +34122,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var Observable_1 = __webpack_require__(0);
-var ScalarObservable_1 = __webpack_require__(124);
+var ScalarObservable_1 = __webpack_require__(125);
 var EmptyObservable_1 = __webpack_require__(32);
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -34833,11 +34862,11 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Observable_1 = __webpack_require__(0);
 var tryCatch_1 = __webpack_require__(15);
-var isFunction_1 = __webpack_require__(131);
+var isFunction_1 = __webpack_require__(86);
 var errorObject_1 = __webpack_require__(13);
 var Subscription_1 = __webpack_require__(10);
 var toString = Object.prototype.toString;
-function isNodeStyleEventEmmitter(sourceObj) {
+function isNodeStyleEventEmitter(sourceObj) {
     return !!sourceObj && typeof sourceObj.addListener === 'function' && typeof sourceObj.removeListener === 'function';
 }
 function isJQueryStyleEventEmitter(sourceObj) {
@@ -34931,7 +34960,7 @@ var FromEventObservable = (function (_super) {
             sourceObj.on(eventName, handler);
             unsubscribe = function () { return source_2.off(eventName, handler); };
         }
-        else if (isNodeStyleEventEmmitter(sourceObj)) {
+        else if (isNodeStyleEventEmitter(sourceObj)) {
             var source_3 = sourceObj;
             sourceObj.addListener(eventName, handler);
             unsubscribe = function () { return source_3.removeListener(eventName, handler); };
@@ -34977,6 +35006,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var isFunction_1 = __webpack_require__(86);
 var Observable_1 = __webpack_require__(0);
 var Subscription_1 = __webpack_require__(10);
 /**
@@ -35028,9 +35058,10 @@ var FromEventPatternObservable = (function (_super) {
      * @param {function(handler: Function): any} addHandler A function that takes
      * a `handler` function as argument and attaches it somehow to the actual
      * source of events.
-     * @param {function(handler: Function): void} removeHandler A function that
+     * @param {function(handler: Function, signal?: any): void} [removeHandler] An optional function that
      * takes a `handler` function as argument and removes it in case it was
-     * previously attached using `addHandler`.
+     * previously attached using `addHandler`. if addHandler returns signal to teardown when remove,
+     * removeHandler function will forward it.
      * @param {function(...args: any): T} [selector] An optional function to
      * post-process results. It takes the arguments from the event handler and
      * should return a single value.
@@ -35052,10 +35083,13 @@ var FromEventPatternObservable = (function (_super) {
             }
             _this._callSelector(subscriber, args);
         } : function (e) { subscriber.next(e); };
-        this._callAddHandler(handler, subscriber);
+        var retValue = this._callAddHandler(handler, subscriber);
+        if (!isFunction_1.isFunction(removeHandler)) {
+            return;
+        }
         subscriber.add(new Subscription_1.Subscription(function () {
             //TODO: determine whether or not to forward to error handler
-            removeHandler(handler);
+            removeHandler(handler, retValue);
         }));
     };
     FromEventPatternObservable.prototype._callSelector = function (subscriber, args) {
@@ -35069,7 +35103,7 @@ var FromEventPatternObservable = (function (_super) {
     };
     FromEventPatternObservable.prototype._callAddHandler = function (handler, errorSubscriber) {
         try {
-            this.addHandler(handler);
+            return this.addHandler(handler) || null;
         }
         catch (e) {
             errorSubscriber.error(e);
@@ -36075,7 +36109,7 @@ exports.bindNodeCallback = BoundNodeCallbackObservable_1.BoundNodeCallbackObserv
 var isScheduler_1 = __webpack_require__(33);
 var isArray_1 = __webpack_require__(25);
 var ArrayObservable_1 = __webpack_require__(27);
-var combineLatest_1 = __webpack_require__(125);
+var combineLatest_1 = __webpack_require__(126);
 /* tslint:enable:max-line-length */
 /**
  * Combines multiple Observables to create an Observable whose values are
@@ -36154,7 +36188,7 @@ exports.combineLatest = combineLatest;
 
 "use strict";
 
-var concat_1 = __webpack_require__(126);
+var concat_1 = __webpack_require__(127);
 exports.concat = concat_1.concatStatic;
 //# sourceMappingURL=concat.js.map
 
@@ -36184,7 +36218,7 @@ var Subscriber_1 = __webpack_require__(2);
 var Observable_1 = __webpack_require__(0);
 var Subscription_1 = __webpack_require__(10);
 var root_1 = __webpack_require__(14);
-var ReplaySubject_1 = __webpack_require__(123);
+var ReplaySubject_1 = __webpack_require__(124);
 var tryCatch_1 = __webpack_require__(15);
 var errorObject_1 = __webpack_require__(13);
 var assign_1 = __webpack_require__(680);
@@ -36220,7 +36254,36 @@ var WebSocketSubject = (function (_super) {
         return JSON.parse(e.data);
     };
     /**
-     * @param urlConfigOrSource
+     * Wrapper around the w3c-compatible WebSocket object provided by the browser.
+     *
+     * @example <caption>Wraps browser WebSocket</caption>
+     *
+     * let subject = Observable.webSocket('ws://localhost:8081');
+     * subject.subscribe(
+     *    (msg) => console.log('message received: ' + msg),
+     *    (err) => console.log(err),
+     *    () => console.log('complete')
+     *  );
+     * subject.next(JSON.stringify({ op: 'hello' }));
+     *
+     * @example <caption>Wraps WebSocket from nodejs-websocket (using node.js)</caption>
+     *
+     * import { w3cwebsocket } from 'websocket';
+     *
+     * let socket = new WebSocketSubject({
+     *   url: 'ws://localhost:8081',
+     *   WebSocketCtor: w3cwebsocket
+     * });
+     *
+     * let subject = Observable.webSocket('ws://localhost:8081');
+     * subject.subscribe(
+     *    (msg) => console.log('message received: ' + msg),
+     *    (err) => console.log(err),
+     *    () => console.log('complete')
+     *  );
+     * subject.next(JSON.stringify({ op: 'hello' }));
+     *
+     * @param {string | WebSocketSubjectConfig} urlConfigOrSource the source of the websocket as an url or a structure defining the websocket object
      * @return {WebSocketSubject}
      * @static true
      * @name webSocket
@@ -36576,7 +36639,7 @@ exports.using = UsingObservable_1.UsingObservable.create;
 
 "use strict";
 
-var zip_1 = __webpack_require__(130);
+var zip_1 = __webpack_require__(131);
 exports.zip = zip_1.zipStatic;
 //# sourceMappingURL=zip.js.map
 
@@ -37507,6 +37570,54 @@ var OuterSubscriber_1 = __webpack_require__(5);
 var subscribeToResult_1 = __webpack_require__(6);
 /**
  * Catches errors on the observable to be handled by returning a new observable or throwing an error.
+ *
+ * <img src="./img/catch.png" width="100%">
+ *
+ * @example <caption>Continues with a different Observable when there's an error</caption>
+ *
+ * Observable.of(1, 2, 3, 4, 5)
+ *   .map(n => {
+ * 	   if (n == 4) {
+ * 	     throw 'four!';
+ *     }
+ *	   return n;
+ *   })
+ *   .catch(err => Observable.of('I', 'II', 'III', 'IV', 'V'))
+ *   .subscribe(x => console.log(x));
+ *   // 1, 2, 3, I, II, III, IV, V
+ *
+ * @example <caption>Retries the caught source Observable again in case of error, similar to retry() operator</caption>
+ *
+ * Observable.of(1, 2, 3, 4, 5)
+ *   .map(n => {
+ * 	   if (n === 4) {
+ * 	     throw 'four!';
+ *     }
+ * 	   return n;
+ *   })
+ *   .catch((err, caught) => caught)
+ *   .take(30)
+ *   .subscribe(x => console.log(x));
+ *   // 1, 2, 3, 1, 2, 3, ...
+ *
+ * @example <caption>Throws a new error when the source Observable throws an error</caption>
+ *
+ * Observable.of(1, 2, 3, 4, 5)
+ *   .map(n => {
+ *     if (n == 4) {
+ *       throw 'four!';
+ *     }
+ *     return n;
+ *   })
+ *   .catch(err => {
+ *     throw 'error in source. Details: ' + err;
+ *   })
+ *   .subscribe(
+ *     x => console.log(x),
+ *     err => console.log(err)
+ *   );
+ *   // 1, 2, 3, error in source. Details: four!
+ *
  * @param {function} selector a function that takes as arguments `err`, which is the error, and `caught`, which
  *  is the source observable, in case you'd like to "retry" that observable by returning it again. Whatever observable
  *  is returned by the `selector` will be used to continue the observable chain.
@@ -37544,20 +37655,24 @@ var CatchSubscriber = (function (_super) {
         this.caught = caught;
     }
     // NOTE: overriding `error` instead of `_error` because we don't want
-    // to have this flag this subscriber as `isStopped`.
+    // to have this flag this subscriber as `isStopped`. We can mimic the
+    // behavior of the RetrySubscriber (from the `retry` operator), where
+    // we unsubscribe from our source chain, reset our Subscriber flags,
+    // then subscribe to the selector result.
     CatchSubscriber.prototype.error = function (err) {
         if (!this.isStopped) {
             var result = void 0;
             try {
                 result = this.selector(err, this.caught);
             }
-            catch (err) {
-                this.destination.error(err);
+            catch (err2) {
+                _super.prototype.error.call(this, err2);
                 return;
             }
             this.unsubscribe();
-            this.destination.remove(this);
-            subscribeToResult_1.subscribeToResult(this, result);
+            this.closed = false;
+            this.isStopped = false;
+            this.add(subscribeToResult_1.subscribeToResult(this, result));
         }
     };
     return CatchSubscriber;
@@ -37570,7 +37685,7 @@ var CatchSubscriber = (function (_super) {
 
 "use strict";
 
-var combineLatest_1 = __webpack_require__(125);
+var combineLatest_1 = __webpack_require__(126);
 /**
  * Converts a higher-order Observable into a first-order Observable by waiting
  * for the outer Observable to complete, then applying {@link combineLatest}.
@@ -37849,7 +37964,7 @@ var Subscriber_1 = __webpack_require__(2);
  * `count` transforms an Observable that emits values into an Observable that
  * emits a single value that represents the number of values emitted by the
  * source Observable. If the source Observable terminates with an error, `count`
- * will pass this error notification along without emitting an value first. If
+ * will pass this error notification along without emitting a value first. If
  * the source Observable does not terminate at all, `count` will neither emit
  * a value nor terminate. This operator takes an optional `predicate` function
  * as argument, in which case the output emission will represent the number of
@@ -40522,7 +40637,7 @@ var MaterializeSubscriber = (function (_super) {
 
 "use strict";
 
-var reduce_1 = __webpack_require__(129);
+var reduce_1 = __webpack_require__(130);
 /**
  * The Max operator operates on an Observable that emits numbers (or items that can be compared with a provided function),
  * and when source Observable completes it emits a single item: the item with the largest value.
@@ -40579,26 +40694,49 @@ var errorObject_1 = __webpack_require__(13);
 var subscribeToResult_1 = __webpack_require__(6);
 var OuterSubscriber_1 = __webpack_require__(5);
 /**
- * @param project
- * @param seed
- * @param concurrent
- * @return {Observable<R>|WebSocketSubject<T>|Observable<T>}
+ * Applies an accumulator function over the source Observable where the
+ * accumulator function itself returns an Observable, then each intermediate
+ * Observable returned is merged into the output Observable.
+ *
+ * <span class="informal">It's like {@link scan}, but the Observables returned
+ * by the accumulator are merged into the outer Observable.</span>
+ *
+ * @example <caption>Count the number of click events</caption>
+ * const click$ = Rx.Observable.fromEvent(document, 'click');
+ * const one$ = click$.mapTo(1);
+ * const seed = 0;
+ * const count$ = one$.mergeScan((acc, one) => Rx.Observable.of(acc + one), seed);
+ * count$.subscribe(x => console.log(x));
+ *
+ * // Results:
+ * 1
+ * 2
+ * 3
+ * 4
+ * // ...and so on for each click
+ *
+ * @param {function(acc: R, value: T): Observable<R>} accumulator
+ * The accumulator function called on each source value.
+ * @param seed The initial accumulation value.
+ * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of
+ * input Observables being subscribed to concurrently.
+ * @return {Observable<R>} An observable of the accumulated values.
  * @method mergeScan
  * @owner Observable
  */
-function mergeScan(project, seed, concurrent) {
+function mergeScan(accumulator, seed, concurrent) {
     if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-    return this.lift(new MergeScanOperator(project, seed, concurrent));
+    return this.lift(new MergeScanOperator(accumulator, seed, concurrent));
 }
 exports.mergeScan = mergeScan;
 var MergeScanOperator = (function () {
-    function MergeScanOperator(project, seed, concurrent) {
-        this.project = project;
+    function MergeScanOperator(accumulator, seed, concurrent) {
+        this.accumulator = accumulator;
         this.seed = seed;
         this.concurrent = concurrent;
     }
     MergeScanOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new MergeScanSubscriber(subscriber, this.project, this.seed, this.concurrent));
+        return source.subscribe(new MergeScanSubscriber(subscriber, this.accumulator, this.seed, this.concurrent));
     };
     return MergeScanOperator;
 }());
@@ -40610,9 +40748,9 @@ exports.MergeScanOperator = MergeScanOperator;
  */
 var MergeScanSubscriber = (function (_super) {
     __extends(MergeScanSubscriber, _super);
-    function MergeScanSubscriber(destination, project, acc, concurrent) {
+    function MergeScanSubscriber(destination, accumulator, acc, concurrent) {
         _super.call(this, destination);
-        this.project = project;
+        this.accumulator = accumulator;
         this.acc = acc;
         this.concurrent = concurrent;
         this.hasValue = false;
@@ -40624,7 +40762,7 @@ var MergeScanSubscriber = (function (_super) {
     MergeScanSubscriber.prototype._next = function (value) {
         if (this.active < this.concurrent) {
             var index = this.index++;
-            var ish = tryCatch_1.tryCatch(this.project)(this.acc, value);
+            var ish = tryCatch_1.tryCatch(this.accumulator)(this.acc, value);
             var destination = this.destination;
             if (ish === errorObject_1.errorObject) {
                 destination.error(errorObject_1.errorObject.e);
@@ -40681,7 +40819,7 @@ exports.MergeScanSubscriber = MergeScanSubscriber;
 
 "use strict";
 
-var reduce_1 = __webpack_require__(129);
+var reduce_1 = __webpack_require__(130);
 /**
  * The Min operator operates on an Observable that emits numbers (or items that can be compared with a provided function),
  * and when source Observable completes it emits a single item: the item with the smallest value.
@@ -40868,7 +41006,7 @@ exports.partition = partition;
 
 "use strict";
 
-var map_1 = __webpack_require__(127);
+var map_1 = __webpack_require__(128);
 /**
  * Maps each source value (an object) to its specified nested property.
  *
@@ -41000,7 +41138,7 @@ exports.publishLast = publishLast;
 
 "use strict";
 
-var ReplaySubject_1 = __webpack_require__(123);
+var ReplaySubject_1 = __webpack_require__(124);
 var multicast_1 = __webpack_require__(49);
 /**
  * @param bufferSize
@@ -41132,16 +41270,15 @@ var subscribeToResult_1 = __webpack_require__(6);
  * @owner Observable
  */
 function repeatWhen(notifier) {
-    return this.lift(new RepeatWhenOperator(notifier, this));
+    return this.lift(new RepeatWhenOperator(notifier));
 }
 exports.repeatWhen = repeatWhen;
 var RepeatWhenOperator = (function () {
-    function RepeatWhenOperator(notifier, source) {
+    function RepeatWhenOperator(notifier) {
         this.notifier = notifier;
-        this.source = source;
     }
     RepeatWhenOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RepeatWhenSubscriber(subscriber, this.notifier, this.source));
+        return source.subscribe(new RepeatWhenSubscriber(subscriber, this.notifier, source));
     };
     return RepeatWhenOperator;
 }());
@@ -41156,30 +41293,28 @@ var RepeatWhenSubscriber = (function (_super) {
         _super.call(this, destination);
         this.notifier = notifier;
         this.source = source;
+        this.sourceIsBeingSubscribedTo = true;
     }
+    RepeatWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+        this.source.subscribe(this);
+        this.sourceIsBeingSubscribedTo = true;
+    };
+    RepeatWhenSubscriber.prototype.notifyComplete = function (innerSub) {
+        if (this.sourceIsBeingSubscribedTo === false) {
+            return _super.prototype.complete.call(this);
+        }
+    };
     RepeatWhenSubscriber.prototype.complete = function () {
+        this.sourceIsBeingSubscribedTo = false;
         if (!this.isStopped) {
-            var notifications = this.notifications;
-            var retries = this.retries;
-            var retriesSubscription = this.retriesSubscription;
-            if (!retries) {
-                notifications = new Subject_1.Subject();
-                retries = tryCatch_1.tryCatch(this.notifier)(notifications);
-                if (retries === errorObject_1.errorObject) {
-                    return _super.prototype.complete.call(this);
-                }
-                retriesSubscription = subscribeToResult_1.subscribeToResult(this, retries);
+            if (!this.retries) {
+                this.subscribeToRetries();
             }
-            else {
-                this.notifications = null;
-                this.retriesSubscription = null;
+            else if (this.retriesSubscription.closed) {
+                return _super.prototype.complete.call(this);
             }
-            this.unsubscribe();
-            this.closed = false;
-            this.notifications = notifications;
-            this.retries = retries;
-            this.retriesSubscription = retriesSubscription;
-            notifications.next();
+            this.temporarilyUnsubscribe();
+            this.notifications.next();
         }
     };
     RepeatWhenSubscriber.prototype._unsubscribe = function () {
@@ -41194,7 +41329,16 @@ var RepeatWhenSubscriber = (function (_super) {
         }
         this.retries = null;
     };
-    RepeatWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+    RepeatWhenSubscriber.prototype.subscribeToRetries = function () {
+        this.notifications = new Subject_1.Subject();
+        var retries = tryCatch_1.tryCatch(this.notifier)(this.notifications);
+        if (retries === errorObject_1.errorObject) {
+            return _super.prototype.complete.call(this);
+        }
+        this.retries = retries;
+        this.retriesSubscription = subscribeToResult_1.subscribeToResult(this, retries);
+    };
+    RepeatWhenSubscriber.prototype.temporarilyUnsubscribe = function () {
         var _a = this, notifications = _a.notifications, retries = _a.retries, retriesSubscription = _a.retriesSubscription;
         this.notifications = null;
         this.retries = null;
@@ -41205,7 +41349,6 @@ var RepeatWhenSubscriber = (function (_super) {
         this.notifications = notifications;
         this.retries = retries;
         this.retriesSubscription = retriesSubscription;
-        this.source.subscribe(this);
     };
     return RepeatWhenSubscriber;
 }(OuterSubscriber_1.OuterSubscriber));
@@ -42228,9 +42371,9 @@ var SkipWhileSubscriber = (function (_super) {
 "use strict";
 
 var ArrayObservable_1 = __webpack_require__(27);
-var ScalarObservable_1 = __webpack_require__(124);
+var ScalarObservable_1 = __webpack_require__(125);
 var EmptyObservable_1 = __webpack_require__(32);
-var concat_1 = __webpack_require__(126);
+var concat_1 = __webpack_require__(127);
 var isScheduler_1 = __webpack_require__(33);
 /* tslint:disable:max-line-length */
 /**
@@ -43585,8 +43728,51 @@ var ToArraySubscriber = (function (_super) {
 var root_1 = __webpack_require__(14);
 /* tslint:disable:max-line-length */
 /**
- * @param PromiseCtor
- * @return {Promise<T>}
+ * Converts an Observable sequence to a ES2015 compliant promise.
+ *
+ * @example
+ * // Using normal ES2015
+ * let source = Rx.Observable
+ *   .just(42)
+ *   .toPromise();
+ *
+ * source.then((value) => console.log('Value: %s', value));
+ * // => Value: 42
+ *
+ * // Rejected Promise
+ * // Using normal ES2015
+ * let source = Rx.Observable
+ *   .throw(new Error('woops'))
+ *   .toPromise();
+ *
+ * source
+ *   .then((value) => console.log('Value: %s', value))
+ *   .catch((err) => console.log('Error: %s', err));
+ * // => Error: Error: woops
+ *
+ * // Setting via the config
+ * Rx.config.Promise = RSVP.Promise;
+ *
+ * let source = Rx.Observable
+ *   .of(42)
+ *   .toPromise();
+ *
+ * source.then((value) => console.log('Value: %s', value));
+ * // => Value: 42
+ *
+ * // Setting via the method
+ * let source = Rx.Observable
+ *   .just(42)
+ *   .toPromise(RSVP.Promise);
+ *
+ * source.then((value) => console.log('Value: %s', value));
+ * // => Value: 42
+ *
+ * @param PromiseCtor promise The constructor of the promise. If not provided,
+ * it will look for a constructor first in Rx.config.Promise then fall back to
+ * the native Promise constructor if available.
+ * @return {Promise<T>} An ES2015 compatible promise with the last value from
+ * the observable sequence.
  * @method toPromise
  * @owner Observable
  */
@@ -43958,16 +44144,15 @@ var WindowTimeSubscriber = (function (_super) {
         this.windowCreationInterval = windowCreationInterval;
         this.scheduler = scheduler;
         this.windows = [];
+        var window = this.openWindow();
         if (windowCreationInterval !== null && windowCreationInterval >= 0) {
-            var window_1 = this.openWindow();
-            var closeState = { subscriber: this, window: window_1, context: null };
+            var closeState = { subscriber: this, window: window, context: null };
             var creationState = { windowTimeSpan: windowTimeSpan, windowCreationInterval: windowCreationInterval, subscriber: this, scheduler: scheduler };
             this.add(scheduler.schedule(dispatchWindowClose, windowTimeSpan, closeState));
             this.add(scheduler.schedule(dispatchWindowCreation, windowCreationInterval, creationState));
         }
         else {
-            var window_2 = this.openWindow();
-            var timeSpanOnlyState = { subscriber: this, window: window_2, windowTimeSpan: windowTimeSpan };
+            var timeSpanOnlyState = { subscriber: this, window: window, windowTimeSpan: windowTimeSpan };
             this.add(scheduler.schedule(dispatchWindowTimeSpanOnly, windowTimeSpan, timeSpanOnlyState));
         }
     }
@@ -43975,9 +44160,9 @@ var WindowTimeSubscriber = (function (_super) {
         var windows = this.windows;
         var len = windows.length;
         for (var i = 0; i < len; i++) {
-            var window_3 = windows[i];
-            if (!window_3.closed) {
-                window_3.next(value);
+            var window_1 = windows[i];
+            if (!window_1.closed) {
+                window_1.next(value);
             }
         }
     };
@@ -43991,9 +44176,9 @@ var WindowTimeSubscriber = (function (_super) {
     WindowTimeSubscriber.prototype._complete = function () {
         var windows = this.windows;
         while (windows.length > 0) {
-            var window_4 = windows.shift();
-            if (!window_4.closed) {
-                window_4.complete();
+            var window_2 = windows.shift();
+            if (!window_2.closed) {
+                window_2.complete();
             }
         }
         this.destination.complete();
@@ -44015,7 +44200,7 @@ var WindowTimeSubscriber = (function (_super) {
 function dispatchWindowTimeSpanOnly(state) {
     var subscriber = state.subscriber, windowTimeSpan = state.windowTimeSpan, window = state.window;
     if (window) {
-        window.complete();
+        subscriber.closeWindow(window);
     }
     state.window = subscriber.openWindow();
     this.schedule(state, windowTimeSpan);
@@ -44030,8 +44215,8 @@ function dispatchWindowCreation(state) {
     action.add(context.subscription);
     action.schedule(state, windowCreationInterval);
 }
-function dispatchWindowClose(arg) {
-    var subscriber = arg.subscriber, window = arg.window, context = arg.context;
+function dispatchWindowClose(state) {
+    var subscriber = state.subscriber, window = state.window, context = state.context;
     if (context && context.action && context.subscription) {
         context.action.remove(context.subscription);
     }
@@ -44500,7 +44685,7 @@ var WithLatestFromSubscriber = (function (_super) {
 
 "use strict";
 
-var zip_1 = __webpack_require__(130);
+var zip_1 = __webpack_require__(131);
 /**
  * @param project
  * @return {Observable<R>|WebSocketSubject<T>|Observable<T>}
@@ -45975,7 +46160,7 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _reactRedux = __webpack_require__(42);
 
-var _treeUtils = __webpack_require__(86);
+var _treeUtils = __webpack_require__(87);
 
 var _actionCreators = __webpack_require__(214);
 
