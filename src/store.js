@@ -1,10 +1,12 @@
 import { createStore, combineReducers } from 'redux';
 import * as reducers from './reducers';
+import {textMock} from  './mocks';
 
 const initialState = {
-    trie: {},
-    searchMask: ""
+    searchMask: "",
+    text: textMock
 };
+
 const store = createStore(
     combineReducers(reducers),
     initialState,

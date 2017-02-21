@@ -1,4 +1,4 @@
-import trie from './trie';
+import text from './text';
 import searchMask from './search';
 
-export {trie, searchMask};
+export {searchMask, text};

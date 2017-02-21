@@ -11097,12 +11097,15 @@ var _reducers = __webpack_require__(160);
 
 var reducers = _interopRequireWildcard(_reducers);
 
+var _mocks = __webpack_require__(149);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var initialState = {
-    trie: {},
-    searchMask: ""
+    searchMask: "",
+    text: _mocks.textMock
 };
+
 var store = (0, _redux.createStore)((0, _redux.combineReducers)(reducers), initialState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 exports.default = store;
@@ -11139,10 +11142,10 @@ var fill = function fill(list, pNode) {
 
     if (list.length) {
         fill(list, cNode);
-    } else /*if (cNode.children.length === 0)*/{
-            var terminator = createNode(null, cNode);
-            cNode.children.push(terminator);
-        }
+    } else if (cNode.children.length === 0) {
+        var terminator = createNode(null, cNode);
+        cNode.children.push(terminator);
+    }
 };
 
 var handleWord = function handleWord(tree, word) {
@@ -11572,6 +11575,8 @@ var _trieNode2 = _interopRequireDefault(_trieNode);
 
 var _utils = __webpack_require__(163);
 
+var _treeUtils = __webpack_require__(151);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Trie = function (_Component) {
@@ -11579,12 +11584,17 @@ var Trie = function (_Component) {
 
     function Trie(props) {
         (0, _classCallCheck3.default)(this, Trie);
-        return (0, _possibleConstructorReturn3.default)(this, (Trie.__proto__ || (0, _getPrototypeOf2.default)(Trie)).call(this, props));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (Trie.__proto__ || (0, _getPrototypeOf2.default)(Trie)).call(this, props));
+
+        _this._trie = null;
+        return _this;
     }
 
     (0, _createClass3.default)(Trie, [{
         key: 'render',
         value: function render() {
+
             if (!this.props._trie.root) {
                 return _react2.default.createElement('div', null);
             }
@@ -11598,7 +11608,9 @@ var Trie = function (_Component) {
                     xmlns: 'http://www.w3.org/2000/svg',
                     version: '1.1',
                     height: '800',
-                    viewBox: viewBox },
+                    viewBox: viewBox,
+                    className: 'trie-svg'
+                },
                 _react2.default.createElement(_trieDefinitions2.default, null),
                 _react2.default.createElement(
                     'g',
@@ -11748,7 +11760,7 @@ var Trie = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(function (state) {
     return {
-        _trie: state.trie,
+        _trie: (0, _treeUtils.parseText)(state.text),
         _mask: state.searchMask
     };
 })(Trie);
@@ -11763,11 +11775,11 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.searchMask = exports.trie = undefined;
+exports.text = exports.searchMask = undefined;
 
-var _trie = __webpack_require__(162);
+var _text = __webpack_require__(689);
 
-var _trie2 = _interopRequireDefault(_trie);
+var _text2 = _interopRequireDefault(_text);
 
 var _search = __webpack_require__(161);
 
@@ -11775,8 +11787,8 @@ var _search2 = _interopRequireDefault(_search);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.trie = _trie2.default;
 exports.searchMask = _search2.default;
+exports.text = _text2.default;
 
 /***/ }),
 /* 161 */
@@ -11810,41 +11822,7 @@ var search = function search() {
 exports.default = search;
 
 /***/ }),
-/* 162 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _assign = __webpack_require__(96);
-
-var _assign2 = _interopRequireDefault(_assign);
-
-var _actionTypes = __webpack_require__(33);
-
-var _actionTypes2 = _interopRequireDefault(_actionTypes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var trie = function trie() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var action = arguments[1];
-
-    switch (action.type) {
-        case _actionTypes2.default.CREATE_TRIE:
-            return (0, _assign2.default)({}, state, action.payload);
-        default:
-            return state;
-    }
-};
-
-exports.default = trie;
-
-/***/ }),
+/* 162 */,
 /* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -45812,13 +45790,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(42);
 
+var _sourceTextDialog = __webpack_require__(688);
+
+var _sourceTextDialog2 = _interopRequireDefault(_sourceTextDialog);
+
 var _actionTypes = __webpack_require__(33);
 
 var _actionTypes2 = _interopRequireDefault(_actionTypes);
-
-var _mocks = __webpack_require__(149);
-
-var _treeUtils = __webpack_require__(151);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45827,18 +45805,29 @@ var SourceText = function (_Component) {
 
     function SourceText(props) {
         (0, _classCallCheck3.default)(this, SourceText);
-        return (0, _possibleConstructorReturn3.default)(this, (SourceText.__proto__ || (0, _getPrototypeOf2.default)(SourceText)).call(this, props));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (SourceText.__proto__ || (0, _getPrototypeOf2.default)(SourceText)).call(this, props));
+
+        _this.state = {
+            dialogOpen: false
+        };
+        return _this;
     }
 
     (0, _createClass3.default)(SourceText, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            this.textInput.value = _mocks.textMock;
-        }
-    }, {
         key: 'setSourceText',
         value: function setSourceText() {
-            this.props.onTextSet((0, _treeUtils.parseText)(this.textInput.value));
+            this.props.onTextSet(this.textInput.value);
+        }
+    }, {
+        key: 'openDialog',
+        value: function openDialog() {
+            this.setState({ dialogOpen: true });
+        }
+    }, {
+        key: 'onCloseDialog',
+        value: function onCloseDialog() {
+            this.setState({ dialogOpen: false });
         }
     }, {
         key: 'render',
@@ -45854,7 +45843,30 @@ var SourceText = function (_Component) {
                     ref: function ref(input) {
                         return _this2.textInput = input;
                     },
-                    onChange: this.setSourceText.bind(this)
+                    onChange: this.setSourceText.bind(this),
+                    value: this.props._text
+                }),
+                _react2.default.createElement(
+                    'button',
+                    {
+                        className: 'trie-source-text__btn',
+                        onClick: this.openDialog.bind(this)
+                    },
+                    _react2.default.createElement(
+                        'svg',
+                        {
+                            xmlns: 'http://www.w3.org/2000/svg',
+                            version: '1.1',
+                            viewBox: '0 0 100 100'
+                        },
+                        _react2.default.createElement('circle', { r: '10', cx: '20', cy: '50', fill: '#4390bc' }),
+                        _react2.default.createElement('circle', { r: '10', cx: '50', cy: '50', fill: '#4390bc' }),
+                        _react2.default.createElement('circle', { r: '10', cx: '78', cy: '50', fill: '#4390bc' })
+                    )
+                ),
+                this.state.dialogOpen && _react2.default.createElement(_sourceTextDialog2.default, {
+                    onClose: this.onCloseDialog.bind(this),
+                    textValue: this.props._text
                 })
             );
         }
@@ -45863,17 +45875,195 @@ var SourceText = function (_Component) {
 }(_react.Component);
 
 exports.default = (0, _reactRedux.connect)(function (state) {
-    return state;
+    return {
+        _text: state.text
+    };
 }, function (dispatch) {
     return {
         onTextSet: function onTextSet(text) {
             dispatch({
-                type: _actionTypes2.default.CREATE_TRIE,
+                type: _actionTypes2.default.TEXT_CHANGED,
                 payload: text
             });
         }
     };
 })(SourceText);
+
+/***/ }),
+/* 688 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _getPrototypeOf = __webpack_require__(53);
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__(54);
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__(55);
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__(57);
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__(56);
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = __webpack_require__(10);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(42);
+
+var _actionTypes = __webpack_require__(33);
+
+var _actionTypes2 = _interopRequireDefault(_actionTypes);
+
+var _treeUtils = __webpack_require__(151);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SourceTextDialog = function (_Component) {
+    (0, _inherits3.default)(SourceTextDialog, _Component);
+
+    function SourceTextDialog(props) {
+        (0, _classCallCheck3.default)(this, SourceTextDialog);
+        return (0, _possibleConstructorReturn3.default)(this, (SourceTextDialog.__proto__ || (0, _getPrototypeOf2.default)(SourceTextDialog)).call(this, props));
+    }
+
+    (0, _createClass3.default)(SourceTextDialog, [{
+        key: 'onCloseBtnClick',
+        value: function onCloseBtnClick() {
+            this.props.onClose();
+        }
+    }, {
+        key: 'onOkBtnClick',
+        value: function onOkBtnClick() {
+            this.props.onTextSet(this.textArea.value);
+            this.props.onClose();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement('div', { className: 'mask' }),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'source-text-dialog' },
+                    _react2.default.createElement(
+                        'button',
+                        {
+                            className: 'source-text-dialog-close',
+                            type: 'button',
+                            onClick: this.onCloseBtnClick.bind(this)
+                        },
+                        'Close'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'source-text-dialog__content' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'source-text' },
+                            ' Text'
+                        ),
+                        _react2.default.createElement(
+                            'textarea',
+                            {
+                                id: 'source-text',
+                                ref: function ref(input) {
+                                    return _this2.textArea = input;
+                                },
+                                className: 'source-text-dialog__textarea'
+                            },
+                            this.props.textValue
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'source-text-dialog__bottom' },
+                        _react2.default.createElement(
+                            'button',
+                            {
+                                className: 'dialog-btn',
+                                onClick: this.onCloseBtnClick.bind(this)
+                            },
+                            'Cancel'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            {
+                                className: 'dialog-btn',
+                                onClick: this.onOkBtnClick.bind(this)
+                            },
+                            'OK'
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+    return SourceTextDialog;
+}(_react.Component);
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return {};
+}, function (dispatch) {
+    return {
+        onTextSet: function onTextSet(text) {
+            dispatch({
+                type: _actionTypes2.default.TEXT_CHANGED,
+                payload: text
+            });
+        }
+    };
+})(SourceTextDialog);
+
+/***/ }),
+/* 689 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _actionTypes = __webpack_require__(33);
+
+var _actionTypes2 = _interopRequireDefault(_actionTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var trie = function trie() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _actionTypes2.default.TEXT_CHANGED:
+            return action.payload;
+        default:
+            return state;
+    }
+};
+
+exports.default = trie;
 
 /***/ })
 /******/ ]);

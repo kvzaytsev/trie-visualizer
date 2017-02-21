@@ -6,13 +6,17 @@ import Terminator from './terminator';
 import TrieNode from './trie-node';
 import {getNodesBetween, dfsForPath, getPathForNode, dfsFromNode} from '../../utils';
 
+import {parseText} from '../../tree-utils';
+
 class Trie extends Component {
 
     constructor(props) {
         super(props);
+        this._trie = null;
     }
 
     render() {
+
         if (!this.props._trie.root) {
             return <div/>;
         }
@@ -25,7 +29,9 @@ class Trie extends Component {
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 height="800"
-                viewBox={viewBox}>
+                viewBox={viewBox}
+                className="trie-svg"
+            >
                 <Defs/>
                 <g className={this.props._mask ? 'grey-out' : ''}>
                     {trieParams.nodeList.map((child, idx) =>
@@ -162,7 +168,7 @@ class Trie extends Component {
 
 export default connect(
     state => ({
-        _trie: state.trie,
+        _trie: parseText(state.text),
         _mask: state.searchMask
     })
 )(Trie);
