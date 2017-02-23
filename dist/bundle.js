@@ -16832,7 +16832,16 @@ var SourceTextDialog = function (_Component) {
 
     function SourceTextDialog(props) {
         (0, _classCallCheck3.default)(this, SourceTextDialog);
-        return (0, _possibleConstructorReturn3.default)(this, (SourceTextDialog.__proto__ || (0, _getPrototypeOf2.default)(SourceTextDialog)).call(this, props));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (SourceTextDialog.__proto__ || (0, _getPrototypeOf2.default)(SourceTextDialog)).call(this, props));
+
+        _this.state = {
+            dragging: false,
+            left: "calc(50% - 250px)",
+            top: "calc(50% - 200px)"
+        };
+        _this.onMouseMove = _this.onMouseMove.bind(_this);
+        return _this;
     }
 
     (0, _createClass3.default)(SourceTextDialog, [{
@@ -16847,6 +16856,52 @@ var SourceTextDialog = function (_Component) {
             this.props.onClose();
         }
     }, {
+        key: 'onMouseMove',
+        value: function onMouseMove(e) {
+            if (!this.state.dragging) return;
+
+            this.setState({
+                left: e.pageX - this.state.rel.left,
+                top: e.pageY - this.state.rel.top
+            });
+
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }, {
+        key: 'onMouseDown',
+        value: function onMouseDown(e) {
+            // if (!SourceTextDialog.checkEvent(e)) return;
+
+            this.setState({
+                dragging: true,
+                rel: {
+                    left: e.pageX - this.dialogContainer.offsetLeft,
+                    top: e.pageY - this.dialogContainer.offsetTop
+                }
+            });
+        }
+    }, {
+        key: 'onMouseUp',
+        value: function onMouseUp(e) {
+            this.setState({
+                dragging: false
+            });
+
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            document.addEventListener('mousemove', this.onMouseMove);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            document.removeEventListener('mousemove', this.onMouseMove);
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -16857,15 +16912,33 @@ var SourceTextDialog = function (_Component) {
                 _react2.default.createElement('div', { className: 'mask' }),
                 _react2.default.createElement(
                     'div',
-                    { className: 'source-text-dialog' },
-                    _react2.default.createElement(
-                        'button',
-                        {
-                            className: 'source-text-dialog-close',
-                            type: 'button',
-                            onClick: this.onCloseBtnClick.bind(this)
+                    {
+                        ref: function ref(dialog) {
+                            return _this2.dialogContainer = dialog;
                         },
-                        'Close'
+                        className: 'source-text-dialog',
+
+                        style: {
+                            left: this.state.left,
+                            top: this.state.top
+                        }
+                    },
+                    _react2.default.createElement(
+                        'div',
+                        {
+                            onMouseDown: this.onMouseDown.bind(this),
+                            onMouseUp: this.onMouseUp.bind(this),
+                            className: 'source-text-dialog__header'
+                        },
+                        _react2.default.createElement(
+                            'button',
+                            {
+                                className: 'source-text-dialog-close',
+                                type: 'button',
+                                onClick: this.onCloseBtnClick.bind(this)
+                            },
+                            'Close'
+                        )
                     ),
                     _react2.default.createElement(
                         'div',
@@ -16909,6 +16982,11 @@ var SourceTextDialog = function (_Component) {
                     )
                 )
             );
+        }
+    }], [{
+        key: 'checkEvent',
+        value: function checkEvent(e) {
+            return e.button === 0 && e.target.classList.contains("source-text-dialog__content");
         }
     }]);
     return SourceTextDialog;

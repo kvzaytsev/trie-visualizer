@@ -8,6 +8,12 @@ import {parseText} from '../tree-utils';
 class SourceTextDialog extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            dragging: false,
+            left: "calc(50% - 250px)",
+            top: "calc(50% - 200px)"
+        };
+        this.onMouseMove = this.onMouseMove.bind(this);
     }
 
     onCloseBtnClick() {
@@ -19,18 +25,73 @@ class SourceTextDialog extends Component {
         this.props.onClose();
     }
 
+    onMouseMove(e) {
+        if (!this.state.dragging) return ;
+
+        this.setState({
+            left: e.pageX - this.state.rel.left,
+            top: e.pageY - this.state.rel.top
+        });
+
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    onMouseDown (e) {
+        // if (!SourceTextDialog.checkEvent(e)) return;
+
+        this.setState({
+            dragging: true,
+            rel: {
+                left: e.pageX - this.dialogContainer.offsetLeft,
+                top: e.pageY - this.dialogContainer.offsetTop
+            }
+        });
+    }
+
+    onMouseUp (e) {
+        this.setState({
+            dragging: false
+        });
+
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    componentDidMount() {
+        document.addEventListener('mousemove', this.onMouseMove);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousemove', this.onMouseMove);
+    }
+
     render() {
         return (
             <div>
                 <div className="mask"/>
-                <div className="source-text-dialog">
-                    <button
-                        className="source-text-dialog-close"
-                        type="button"
-                        onClick={this.onCloseBtnClick.bind(this)}
+                <div
+                    ref={(dialog => this.dialogContainer = dialog)}
+                    className="source-text-dialog"
+
+                    style={{
+                        left: this.state.left,
+                        top: this.state.top
+                    }}
+                >
+                    <div
+                        onMouseDown={this.onMouseDown.bind(this)}
+                        onMouseUp={this.onMouseUp.bind(this)}
+                        className="source-text-dialog__header"
                     >
-                        Close
-                    </button>
+                        <button
+                            className="source-text-dialog-close"
+                            type="button"
+                            onClick={this.onCloseBtnClick.bind(this)}
+                        >
+                            Close
+                        </button>
+                    </div>
                     <div className="source-text-dialog__content">
                         <label htmlFor="source-text">Source Text</label>
                         <textarea
@@ -57,6 +118,13 @@ class SourceTextDialog extends Component {
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    static checkEvent(e) {
+        return (
+            e.button === 0 &&
+            e.target.classList.contains("source-text-dialog__content")
         );
     }
 }

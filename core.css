@@ -73,7 +73,6 @@ svg.trie-search__icon circle {
     stroke: #406e97;
 }
 
-
 .trie-search__input {
     width: 100%;
     border: none;
@@ -103,18 +102,16 @@ svg.trie-search__icon circle {
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
 
 .source-text-dialog {
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: calc(50% - 200px);
+    left: calc(50% - 250px);
     width: 500px;
     background-color: white;
-    margin-left: -250px;
-    margin-top: -200px;
     box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7);
     z-index: 3;
 }
@@ -152,8 +149,12 @@ svg.trie-search__icon circle {
     transform: rotate(-45deg);
 }
 
+.source-text-dialog__header {
+    height: 30px;
+}
+
 .source-text-dialog__content {
-    padding: 30px 30px 10px 30px;
+    padding: 0 30px 10px 30px;
 }
 
 .source-text-dialog__content textarea {
@@ -247,7 +248,7 @@ svg.trie-search__icon circle {
 .rest line,
 .mask line {
     /*stroke: #43990F;*/
-    stroke:  #650000;
+    stroke: #650000;
     fill: #43990F;
 }
 
