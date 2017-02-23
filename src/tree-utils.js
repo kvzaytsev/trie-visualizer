@@ -15,7 +15,10 @@ const fill = (list, pNode) => {
 
     if (list.length) {
         fill(list, cNode);
-    } else if (cNode.children.length === 0) {
+    } else if (
+        cNode.children.length === 0 ||
+        cNode.children.reduce((res, child) => (res && child.value !== null), true)
+    ) {
         let terminator = createNode(null, cNode);
         cNode.children.push(terminator);
     }

@@ -158,7 +158,7 @@ svg.trie-search__icon circle {
 }
 
 .source-text-dialog__content textarea {
-    border: 1px solid #eee;
+    border: 1px solid #ccc;
     width: 100%;
     height: 200px;
     box-sizing: border-box;
