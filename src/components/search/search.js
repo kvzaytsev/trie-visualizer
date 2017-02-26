@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Observable} from 'rxjs';
 
-import ACTION_TYPES from '../action-types';
+import ACTION_TYPES from '../../action-types';
 
 class Search extends Component {
     constructor(props) {

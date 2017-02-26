@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import ACTION_TYPES from '../action-types';
-
-import {parseText} from '../tree-utils';
+import ACTION_TYPES from '../../action-types';
 
 class SourceTextDialog extends Component {
     constructor(props) {
@@ -38,8 +36,6 @@ class SourceTextDialog extends Component {
     }
 
     onMouseDown (e) {
-        // if (!SourceTextDialog.checkEvent(e)) return;
-
         this.setState({
             dragging: true,
             rel: {

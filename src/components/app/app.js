@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import Trie from './trie/trie.js';
-import Search from './search';
-import SourceText from './source-text';
+import Trie from '../trie/trie.js';
+import Search from '../search/search';
+import SourceText from '../source-text/source-text';
+
+import Styles from './app.css';
 
 class Application extends Component {
     constructor(props) {
@@ -12,8 +14,8 @@ class Application extends Component {
 
     render() {
         return (
-            <div className="app-root">
-                <div className="app-header">
+            <div className={Styles.root}>
+                <div className={Styles.header}>
                     <SourceText />
                     <Search />
                 </div>

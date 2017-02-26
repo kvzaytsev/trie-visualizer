@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import SourceTextDialog from './source-text-dialog';
-import ACTION_TYPES from '../action-types';
+import ACTION_TYPES from '../../action-types';
 
 class SourceText extends Component {
 

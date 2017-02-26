@@ -6,7 +6,7 @@ import Terminator from './terminator';
 import TrieNode from './trie-node';
 import {getNodesBetween, dfsForPath, getPathForNode, dfsFromNode} from '../../utils';
 
-import {parseText} from '../../tree-utils';
+import {parseText} from './tree-utils';
 
 class Trie extends Component {
 

@@ -2,12 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux';
 
-import {parseText} from './tree-utils';
-import {createTrie} from './action-creators';
-import {textMock} from  './mocks';
-
 import store from './store';
-import App from './components/app'
+import App from './components/app/app'
 
 ReactDOM.render(
     <Provider store={store}>
@@ -15,8 +11,6 @@ ReactDOM.render(
     </Provider>,
     document.querySelector('.root')
 );
-
-const start = text => store.dispatch(createTrie(parseText(text)));
 
 /*const doSearch = mask => {
     clearClassList(svgContentG);
@@ -57,6 +51,3 @@ const start = text => store.dispatch(createTrie(parseText(text)));
         });
     }
 };*/
-
-
-start(textMock);
