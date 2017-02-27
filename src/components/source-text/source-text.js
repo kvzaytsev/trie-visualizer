@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import SourceTextDialog from './source-text-dialog';
 import ACTION_TYPES from '../../action-types';
 
+import Styles from './source-text.css';
+
 class SourceText extends Component {
 
     constructor(props) {
@@ -18,25 +20,29 @@ class SourceText extends Component {
     }
 
     openDialog() {
-        this.setState({dialogOpen:true});
+        this.setState({
+            dialogOpen:true
+        });
     }
 
     onCloseDialog() {
-        this.setState({dialogOpen:false});
+        this.setState({
+            dialogOpen:false
+        });
     }
 
     render() {
         return (
-            <div className="trie-source-text">
+            <div className={Styles.container}>
                 <input
                     type="text"
-                    className="trie-source-text__input"
+                    className={Styles.input}
                     ref={input => this.textInput = input}
                     onChange={this.setSourceText.bind(this)}
                     value={this.props._text}
                 />
                 <button
-                    className="trie-source-text__btn"
+                    className={Styles.btn}
                     onClick={this.openDialog.bind(this)}
                 >
                     <svg

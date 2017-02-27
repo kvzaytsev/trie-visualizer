@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Observable} from 'rxjs';
 
 import ACTION_TYPES from '../../action-types';
+import Styles from './search.css';
 
 class Search extends Component {
     constructor(props) {
@@ -25,9 +26,9 @@ class Search extends Component {
 
     render() {
         return (
-            <div className="trie-search">
+            <div className={Styles.container}>
                 <input
-                    className="trie-search__input"
+                    className={Styles.input}
                     type="text"
                     placeholder="Fuzzy search"
                     ref={input => this.searchInput = input}
@@ -39,7 +40,7 @@ class Search extends Component {
                     height="24"
                     width="24"
                     viewBox="0 0 100 100"
-                    className="trie-search__icon"
+                    className={Styles.icon}
                     stroke="#4390bc"
                 >
                     <circle r="30" cx="60" cy="40" stroke="inherit" fill="white" strokeWidth="14"/>

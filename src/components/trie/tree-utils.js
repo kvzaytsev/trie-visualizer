@@ -20,7 +20,7 @@ const fill = (list, pNode) => {
         cNode.children.reduce((res, child) => (res && child.value !== null), true)
     ) {
         let terminator = createNode(null, cNode);
-        cNode.children.push(terminator);
+        cNode.children.unshift(terminator);
     }
 };
 

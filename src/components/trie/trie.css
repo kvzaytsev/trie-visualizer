@@ -1,0 +1,76 @@
+.container {
+    flex: 1;
+    /*height: 100%;*/
+    width: 100%;
+}
+
+.container circle {
+    fill: #4390bc;
+    stroke: #4390bc;
+    transform-origin: center;
+}
+
+.container line {
+    stroke: #4390bc;
+}
+
+.container text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 25px;
+    fill: white;
+}
+
+.grey-out g:not(.found) text {
+    fill: #eee;
+}
+
+.grey-out g:not(.found) line,
+.grey-out g:not(.found) circle {
+    stroke: #8dbdd8;
+    fill: #8dbdd8;
+}
+
+.found circle {
+    opacity: 1;
+}
+
+g.path line,
+g.rest line,
+g.mask line {
+    /*stroke: #43990F;*/
+    stroke: #650000;
+    fill: #43990F;
+}
+
+g.path circle,
+g.rest circle,
+g.mask circle {
+    /*transform: scale(1.2);*/
+    /*transition-property: filter;*/
+    /*transition-duration: .5s;*/
+}
+
+g.path line,
+g.rest line,
+g.mask line {
+    stroke-width: 2px;
+}
+
+g.rest circle,
+g.path circle {
+    /*stroke: #43990F;*/
+    stroke: #650000;
+    stroke-width: 4;
+    fill: white;
+    /*fill: #43990F;*/
+}
+
+g.rest text,
+g.path text {
+    fill: #650000;
+}
+
+g.mask circle {
+    stroke: #650000;
+    fill: #650000;
+}

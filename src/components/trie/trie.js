@@ -7,6 +7,7 @@ import TrieNode from './trie-node';
 import {getNodesBetween, dfsForPath, getPathForNode, dfsFromNode} from '../../utils';
 
 import {parseText} from './tree-utils';
+import Styles from './trie.css';
 
 class Trie extends Component {
 
@@ -17,6 +18,7 @@ class Trie extends Component {
 
     render() {
 
+        console.log(Styles);
         if (!this.props._trie.root) {
             return <div/>;
         }
@@ -30,10 +32,10 @@ class Trie extends Component {
                 version="1.1"
                 height="800"
                 viewBox={viewBox}
-                className="trie-svg"
+                className={Styles.container}
             >
                 <Defs/>
-                <g className={this.props._mask ? 'grey-out' : ''}>
+                <g className={this.props._mask ? Styles['grey-out'] : ''}>
                     {trieParams.nodeList.map((child, idx) =>
                         child.type === 'terminator'
                             ? Trie.createTerminator(child)

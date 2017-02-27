@@ -1,16 +1,20 @@
 import React from 'react';
 
 import NodeLink from './node-link';
+import Styles from './trie.css';
 
 const terminator = (props) => {
-    let classes = props.highlight
-        ? `found ${props.highlight}`
-        : '';
+    let classes = [];
+
+    if (props.highlight){
+        classes.push('found');
+        classes.push(props.highlight);
+    }
 
     return (
         <g
             id={props.id}
-            className={classes}
+            className={classes.map(c => Styles[c]).join(' ')}
         >
             {
                 props.line && <line

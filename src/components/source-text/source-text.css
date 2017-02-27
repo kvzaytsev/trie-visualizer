@@ -1,0 +1,41 @@
+.container {
+    position: relative;
+    flex: 5;
+    display: flex;
+    margin-top: auto;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.input {
+    flex: 1;
+    border: none;
+    border-bottom: 2px solid #4390bc;
+    padding: 5px 30px 5px 5px;
+    font-size: 20px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.btn {
+    width: 39px;
+    border: 2px solid #4390bc;
+    background: none;
+    padding: 0 6px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    border: 2px solid #406e97;
+    background-color: #406e97;
+}
+
+.btn:active {
+    border: 2px solid #2F4A64;
+    background-color: #2F4A64;
+}
+
+.btn:hover circle {
+    fill: white;
+}
