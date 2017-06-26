@@ -1,6 +1,7 @@
-const ACTION_TYPES = {
-    SEARCH: 'SEARCH',
-    TEXT_CHANGED: 'TEXT.CHANGED'
-};
+export const SEARCH = Symbol('search');
+export const TEXT_CHANGED = Symbol('text.changed');
 
-export default ACTION_TYPES;
+export default {
+    SEARCH,
+    TEXT_CHANGED
+};

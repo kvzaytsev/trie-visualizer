@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import SourceTextDialog from './source-text-dialog';
-import ACTION_TYPES from '../../action-types';
+import { TEXT_CHANGED } from '../../action-types';
 
 import Styles from './source-text.css';
 
@@ -75,7 +75,7 @@ export default connect(
     dispatch => ({
         onTextSet: (text) => {
             dispatch({
-                type: ACTION_TYPES.TEXT_CHANGED,
+                type: TEXT_CHANGED,
                 payload: text
             });
         }

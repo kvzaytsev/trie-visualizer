@@ -18,7 +18,6 @@ class Trie extends Component {
 
     render() {
 
-        console.log(Styles);
         if (!this.props._trie.root) {
             return <div/>;
         }

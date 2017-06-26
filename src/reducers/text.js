@@ -1,8 +1,8 @@
-import ACTION_TYPES from '../action-types';
+import { TEXT_CHANGED } from '../action-types';
 
 const trie = (state = '', action) => {
     switch (action.type) {
-        case ACTION_TYPES.TEXT_CHANGED:
+        case TEXT_CHANGED:
             return action.payload;
         default:
             return state;

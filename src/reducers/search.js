@@ -1,8 +1,8 @@
-import ACTION_TYPES from '../action-types';
+import { SEARCH } from '../action-types';
 
 const search = (state = {}, action) => {
     switch (action.type) {
-        case ACTION_TYPES.SEARCH:
+        case SEARCH:
             return action.payload;
         default:
             return state;
