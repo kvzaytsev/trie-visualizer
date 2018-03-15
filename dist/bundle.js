@@ -18909,7 +18909,7 @@ _reactDom2.default.render(_react2.default.createElement(
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var textMock = exports.textMock = "cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitch bitcoin time timber timbrel tinsel weak weapon wearied wears weasel";
+var textMock = exports.textMock = "cabbage cabby cabdriver cabdriving cactus cackle coach coaching beacon beach beachcomber beard bearish bitcoin time timber timbrel tinsel weak weapon wearied wears weasel";
 var textMock1 = exports.textMock1 = "ca cb cd";
 
 /***/ }),
